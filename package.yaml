@@ -1,9 +1,6 @@
 name: replaceme
 version: 0.1.0.0
 
-extra-source-files:
-  - README.md
-
 dependencies:
   - base >= 4.7 && < 5
 
@@ -51,3 +48,4 @@ ghc-options:
   - -Wno-missing-safe-haskell-mode
   - -Wno-prepositive-qualified-module
   - -Wno-unused-packages
+  - -Wno-implicit-prelude
