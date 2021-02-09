@@ -1,0 +1,19 @@
+[env]
+ghc = "8.10.3"
+packages = [
+  "cabal-install",
+  "cabal2nix",
+  "ghc",
+  "haskell-language-server",
+  "haskellPackages.implicit-hie",
+  "hlint",
+  "hpack",
+  "niv",
+  "ormolu",
+]
+
+[ignore]
+files = [
+  "README.md",
+]
+paths = []
