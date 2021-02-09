@@ -6,10 +6,11 @@ set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/"
 
-# nuke nixkell's own .git dir
-rm -rf .git
-
 project_name=${PWD##*/}
+
+# nuke nixkell's own .git dir and license
+rm -rf .git
+rm LICENSE
 
 nix_files=$(find . -type f -name "*.nix")
 for i in $nix_files; do
@@ -17,3 +18,5 @@ for i in $nix_files; do
 done
 sed -i "s/replaceme/$project_name/g" ./package.yaml
 sed -i "s/replaceme/$project_name/g" ./app/Main.hs
+
+echo "# $project_name" > README.md
