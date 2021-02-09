@@ -23,12 +23,14 @@ let
   ghc = haskellPackages.ghc.withPackages (_ps:
     haskell.lib.getHaskellBuildInputs haskellPackages.replaceme
   );
+
+  comp = callPackage ./comp.nix { };
 in
 {
   bin = haskellPackages.replaceme;
 
   shell = buildEnv {
     name = "replaceme-env";
-    paths = util.getFrom pkgs config.env.packages;
+    paths = util.getFrom pkgs config.env.packages ++ [ comp ];
   };
 }

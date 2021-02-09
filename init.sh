@@ -4,19 +4,25 @@
 # shellcheck shell=bash
 set -euo pipefail
 
+# Start in project root
 cd "$(dirname "${BASH_SOURCE[0]}")/"
 
 project_name=${PWD##*/}
 
-# nuke nixkell's own .git dir and license
+# Nuke nixkell's own .git and license
 rm -rf .git
 rm LICENSE
 
+# Fresh readme
+echo "# $project_name" > README.md
+
+# Replace dummy "replaceme" project name with the real one
 nix_files=$(find . -type f -name "*.nix")
 for i in $nix_files; do
   sed -i "s/replaceme/$project_name/g" "$i"
 done
 sed -i "s/replaceme/$project_name/g" ./package.yaml
-sed -i "s/replaceme/$project_name/g" ./app/Main.hs
+sed -i "s/replaceme/$project_name/g" ./bin/Main.hs
 
-echo "# $project_name" > README.md
+# Fire up the nix shell
+direnv allow .

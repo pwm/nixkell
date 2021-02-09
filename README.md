@@ -2,43 +2,58 @@
 
 A simple Haskell-Nix skeleton.
 
-## Prerequisite
+## Prerequisites
 
 You will need [nix](https://nixos.org/) and [direnv](https://direnv.net/).
 
-##### MacOS:
+```
+# Linux
+$ sh <(curl -L https://nixos.org/nix/install)
+```
 
 ```
+# MacOS
 $ sh <(curl -L https://nixos.org/nix/install) --darwin-use-unencrypted-nix-store-volume
+```
+
+Verify nix and install direnv:
+
+```
 $ nix-env --version
 $ nix-env -iA nixpkgs.direnv
 ```
 
-##### Linux:
-
-```
-$ bash <(curl -L https://nixos.org/nix/install)
-$ nix-env --version
-$ nix-env -iA nixpkgs.direnv
-```
-
-once done you have to [enable direnv in your shell](https://direnv.net/docs/hook.html).
+Once direnv is installed you need to [enable it in your shell](https://direnv.net/docs/hook.html).
 
 ## Usage
 
-The following will set up a skeleton haskell project.
+Setting up a new haskell project, eg. `my-project`, with its own env goes as:
 
 ```
-$ git clone git@github.com:pwm/nixkell.git <my-project>
-$ cd <my-project>
+$ git clone git@github.com:pwm/nixkell.git my-project
+$ cd my-project
 $ ./init.sh
-$ direnv allow
-$ hpack
-$ cabal2nix . > nix/packages/<my-project>.nix
+```
+
+Once it finished setting up you can compile your project with:
+
+```
+$ comp
+```
+
+`comp` takes care of calling `hpack`, `cabal2nix` and `nix-build` for you.
+
+Once compiled run the program with:
+
+```
+$ result/bin/my-project
+Hello my-project!
+```
+
+Whenever you add new packages to the env in `nixkell.toml` run:
+
+```
 $ direnv reload
-$ nix-build nix/release.nix
-$ result/bin/<my-project>
-Hello <my-project>!
 ```
 
 Happy hacking!

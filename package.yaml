@@ -10,7 +10,7 @@ library:
 executables:
   replaceme:
     main: Main.hs
-    source-dirs: app
+    source-dirs: bin
     ghc-options:
       - -threaded
       - -rtsopts
