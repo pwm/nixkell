@@ -31,7 +31,8 @@ Setting up a new haskell project, eg. `my-project`, with its own env goes as:
 
 ```
 $ git clone git@github.com:pwm/nixkell.git my-project
-$ cd my-project
+$ cd my-project # ignore the red direnv message
+$ vim nixkell.toml # optional: set GHC version, etc...
 $ ./init.sh
 ```
 
@@ -55,5 +56,21 @@ Whenever you add new packages to the env in `nixkell.toml` run:
 ```
 $ direnv reload
 ```
+
+Otherwise just do your usual haskell dev flow!
+
+Note: 
+By default nixkell uses `package.yaml` but if you rather directly use `my-project.cabal` that's perfectly fine. Also by default `cabal` is available in the nix shell so instead of `comp` you can also just use cabal:
+
+```
+$ cabal build
+$ cabal run -- my-project
+```
+
+## Learn some Nix
+
+- [Nix: What Even is it Though](https://www.youtube.com/watch?v=6iVXaqUfHi4)
+- [Nix language one-pager](https://github.com/tazjin/nix-1p)
+- [An opinionated guide](https://nix.dev/)
 
 Happy hacking!
