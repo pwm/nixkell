@@ -33,7 +33,7 @@ Setting up a new haskell project, eg. `my-project`, with its own env goes as:
 $ git clone git@github.com:pwm/nixkell.git my-project
 $ cd my-project # ignore the red direnv message
 $ vim nixkell.toml # optional: set GHC version, etc...
-$ ./init.sh
+$ ./init
 ```
 
 Once it finished setting up you can compile your project with:
