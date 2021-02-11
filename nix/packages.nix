@@ -1,8 +1,8 @@
 { pkgs }: with pkgs;
 let
-  config = lib.importTOML ../nixkell.toml;
+  nixkellConfig = lib.importTOML ../nixkell.toml;
 
-  haskellPackages = haskell.packages.${("ghc" + util.removeDot config.env.ghc)}.override {
+  haskellPackages = haskell.packages.${("ghc" + util.removeDot nixkellConfig.env.ghc)}.override {
     overrides =
       let
         generated = haskell.lib.packagesFromDirectory {
@@ -11,8 +11,8 @@ let
         manual = _hfinal: hprev: {
           replaceme = haskell.lib.overrideCabal hprev.replaceme (_drv: {
             src = util.filterSrc ../. {
-              ignoreFiles = config.ignore.files;
-              ignorePaths = config.ignore.paths;
+              ignoreFiles = nixkellConfig.ignore.files;
+              ignorePaths = nixkellConfig.ignore.paths;
             };
           });
         };
@@ -24,13 +24,13 @@ let
     haskell.lib.getHaskellBuildInputs haskellPackages.replaceme
   );
 
-  comp = callPackage ./comp.nix { };
+  scripts = callPackage ./scripts.nix { inherit nixkellConfig; };
 in
 {
   bin = haskellPackages.replaceme;
 
   shell = buildEnv {
     name = "replaceme-env";
-    paths = util.getFrom pkgs config.env.packages ++ [ comp ];
+    paths = util.getFrom pkgs nixkellConfig.env.packages ++ scripts;
   };
 }

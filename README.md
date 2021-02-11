@@ -1,71 +1,77 @@
 # Nixkell
 
-A simple Haskell-Nix skeleton.
+Get your Haskell projects up and running with no fuss using Nix.
+
+## TL;DR
+
+Have [nix](https://nixos.org/) and [direnv](https://direnv.net/) installed and:
+
+```
+$ git clone https://github.com/pwm/nixkell.git <my-new-project>
+$ cd <my-new-project>
+$ ./init.sh
+$ build && run
+Hello <my-new-project>!
+```
+
+## Table of Contents
+
+* [Why Nixkell?](#why-nixkell)
+* [Prerequisites](#Prerequisites)
+* [Usage](#usage)
+* [Learn some Nix](#learn-some-nix)
+* [Licence](#licence)
+
+## Why Nixkell?
+
+The aim of Nixkell is to provide a seamless experience setting up Haskell projects utilising Nix. 
+
+There are other tools for setting up Haskell projects, some of them with amazing user experience. On the other hand Nix historically had a reputation of being complicated, difficult to learn, not beginner friendly. So why do people use Nix given there are other tools with better UX? What are the benefits?
+
+### 1. Nix shell for you
+
+Having a dedicated per-project shell with all the tooling required to work on the project is a game-changer once you work on more than one project. You can `cd foo-project` and have everything ready to work on `foo` and then `cd ../bar-project` and have everything at hand to work on `bar`.
+
+### 2. Nix shell for anyone else working on the project
+
+It gets better. Anyone working on the project will have the same nix shell from #1 and thus the exact same tooling available. As a consequence the bar for contribution becomes a lot lower as simply pulling a repo and entering the nix shell sets the user up with everything they need to get hacking.
+
+### 3. Reproducible builds
+
+It gets even better. Not just the shell but building the project itself happens the same way with the same dependencies pinned to the same versions all around. No more "How do I build it on my machine?".
+
+### 4. Binary caches
+
+Yes, it gets even better! As a consequence of #3 people can push their builds into shared binary caches so that others can pull it saving a ton of time by not having to build it themselves. [Cachix](https://cachix.org/) is a popular example of this.
+
+I hope this quick sales pitch convinced you to give Nix and Nixkell a try.
 
 ## Prerequisites
 
-You will need [nix](https://nixos.org/) and [direnv](https://direnv.net/).
+1. Install [nix](https://nixos.org/)
 
 ```
-# Linux
+# For Linux and macOS < Catalina
 $ sh <(curl -L https://nixos.org/nix/install)
 ```
 
 ```
-# MacOS
+# For macOS >= Catalina
 $ sh <(curl -L https://nixos.org/nix/install) --darwin-use-unencrypted-nix-store-volume
 ```
 
-Verify nix and install direnv:
+2. Verify nix and install [direnv](https://direnv.net/):
 
 ```
 $ nix-env --version
 $ nix-env -iA nixpkgs.direnv
 ```
 
-Once direnv is installed you need to [enable it in your shell](https://direnv.net/docs/hook.html).
+3. Once direnv is installed you need to [enable it](https://direnv.net/docs/hook.html)  in your shell!
 
 ## Usage
 
-Setting up a new haskell project, eg. `my-project`, with its own env goes as:
-
-```
-$ git clone git@github.com:pwm/nixkell.git my-project
-$ cd my-project # ignore the red direnv message
-$ vim nixkell.toml # optional: set GHC version, etc...
-$ ./init.sh
-```
-
-Once it finished setting up you can compile your project with:
-
-```
-$ comp
-```
-
-`comp` takes care of calling `hpack`, `cabal2nix` and `nix-build` for you.
-
-Once compiled run the program with:
-
-```
-$ result/bin/my-project
-Hello my-project!
-```
-
-Whenever you add new packages to the env in `nixkell.toml` run:
-
-```
-$ direnv reload
-```
-
-Otherwise just do your usual haskell dev flow!
-
-Note: 
-By default nixkell uses `package.yaml` but if you rather directly use `my-project.cabal` that's perfectly fine. Also by default `cabal` is available in the nix shell so instead of `comp` you can also just use cabal:
-
-```
-$ cabal build
-$ cabal run -- my-project
-```
+TBD
 
 ## Learn some Nix
 
@@ -73,4 +79,6 @@ $ cabal run -- my-project
 - [Nix language one-pager](https://github.com/tazjin/nix-1p)
 - [An opinionated guide](https://nix.dev/)
 
-Happy hacking!
+## Licence
+
+[MIT](LICENSE)

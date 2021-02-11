@@ -1,3 +1,7 @@
+# Nixkell config
+
+greet = "(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧    Hello Nixkell!    (◕‿◕✿)"
+
 [env]
 ghc = "8.10.3"
 packages = [
