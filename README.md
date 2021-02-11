@@ -1,5 +1,7 @@
 # Nixkell
 
+[![CI](https://github.com/pwm/nixkell/workflows/CI/badge.svg)](https://github.com/pwm/nixkell/actions)
+
 Get your Haskell projects up and running with no fuss using Nix.
 
 ## TL;DR
