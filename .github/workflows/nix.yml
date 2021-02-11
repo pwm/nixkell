@@ -1,0 +1,28 @@
+name: Nix
+
+on: [push]
+
+jobs:
+  nix:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macOS-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: cachix/install-nix-action@v12
+        with:
+          extra_nix_config: |
+            log-lines = 1000
+
+      - name: Pull nix-build-uncached
+        run: nix-build nix -A nix-build-uncached
+
+      - name: Build release
+        run: result/bin/nix-build-uncached ./nix/release.nix
