@@ -6,7 +6,6 @@ let
   '';
   build = pkgs.writeShellScriptBin "build" ''
     set -euo pipefail
-    hpack
     nix-build nix/release.nix
   '';
   run = pkgs.writeShellScriptBin "run" ''
