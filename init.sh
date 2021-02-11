@@ -1,6 +1,5 @@
 #!/usr/bin/env nix-shell
-#!nix-shell -p gnused
-#!nix-shell -i bash
+#!nix-shell -i bash -p gnused
 # shellcheck shell=bash
 set -euo pipefail
 

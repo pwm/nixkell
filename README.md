@@ -30,7 +30,7 @@ There are other tools for setting up Haskell projects, some of them with great u
 
 ### 1. Nix shell
 
-Having a dedicated per-project shell with all the tooling required to work on the project is a game-changer. You can `cd foo-project` and have everything ready to work on `foo`, then `cd ../bar-project` and have everything at hand to work on `bar`. This applies even within a single project. For example would you like to quickly upgrade or downgrade the version of GHC to test something? In Nixkell just update it in `nixkell.toml` and everything will automatically rebuild using the updated version.
+Having a dedicated per-project shell with all the tooling required to work on the project is a game-changer. You can `cd foo-project` and have everything ready to work on `foo`, then `cd ../bar-project` and have everything at hand to work on `bar`. This applies even within a single project. For example would you like to quickly upgrade or downgrade the version of GHC to test something? In Nixkell just update it in `nixkell.toml`, do `build` and everything will automatically rebuild using the updated version.
 
 ### 2. Nix shell for anyone else working on the project
 

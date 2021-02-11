@@ -34,7 +34,6 @@ tests:
 
 ghc-options:
   - -Weverything
-  - -Werror
   - -Wno-missing-exported-signatures # missing-exported-signatures turns off the more strict -Wmissing-signatures.
   - -Wno-missing-import-lists # Requires explicit imports of _every_ function (e.g. ‘$’); too strict
   - -Wno-missed-specialisations # When GHC can’t specialize a polymorphic function.
