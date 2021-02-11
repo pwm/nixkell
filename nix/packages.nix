@@ -3,21 +3,16 @@ let
   nixkellConfig = lib.importTOML ../nixkell.toml;
 
   haskellPackages = haskell.packages.${("ghc" + util.removeDot nixkellConfig.env.ghc)}.override {
-    overrides =
-      let
-        generated = haskell.lib.packagesFromDirectory {
-          directory = ./packages;
-        };
-        manual = _hfinal: hprev: {
-          replaceme = haskell.lib.overrideCabal hprev.replaceme (_drv: {
-            src = util.filterSrc ../. {
-              ignoreFiles = nixkellConfig.ignore.files;
-              ignorePaths = nixkellConfig.ignore.paths;
-            };
-          });
-        };
-      in
-      lib.composeExtensions generated manual;
+    overrides = _hfinal: hprev: {
+      replaceme =
+        let
+          filteredSrc = util.filterSrc ../. {
+            ignoreFiles = nixkellConfig.ignore.files;
+            ignorePaths = nixkellConfig.ignore.paths;
+          };
+        in
+        hprev.callCabal2nix "replaceme" filteredSrc { };
+    };
   };
 
   ghc = haskellPackages.ghc.withPackages (_ps:

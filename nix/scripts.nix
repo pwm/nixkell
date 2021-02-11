@@ -7,7 +7,6 @@ let
   build = pkgs.writeShellScriptBin "build" ''
     set -euo pipefail
     hpack
-    cabal2nix . > nix/packages/replaceme.nix
     nix-build nix/release.nix
   '';
   run = pkgs.writeShellScriptBin "run" ''
