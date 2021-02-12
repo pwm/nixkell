@@ -28,9 +28,8 @@ jobs:
         run: result/bin/nix-build-uncached ./nix/release.nix
 
       - run: |
-          nix-shell
-          which jq
-          ls -al /nix/store
+          nix-shell --run "niv show"
+          nix-shell --run "run"
           # niv show
           # greet
           # run
