@@ -21,9 +21,9 @@ jobs:
           extra_nix_config: |
             log-lines = 1000
 
-      - name: Pull nix-build-uncached
-        run: |
-          nix-build nix -A nix-build-uncached
+      # - name: Pull nix-build-uncached
+      #   run: |
+      #     nix-build nix -A nix-build-uncached
 
       - name: Build
         run: |
@@ -36,9 +36,11 @@ jobs:
 
           export NIX_PATH=nixpkgs=$(jq -r .nixpkgs.url ./nix/sources.json)
 
-          ls -la
+          nix-shell --run "run"
 
-          nix-shell -p direnv --run "ls -al; which direnv; ./init.sh"
+          # ls -la
 
-          ls -la
-          echo "OK"
+          # nix-shell -p direnv --run "ls -al; which direnv; ./init.sh"
+
+          # ls -la
+          # echo "OK"
