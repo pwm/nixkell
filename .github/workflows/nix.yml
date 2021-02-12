@@ -42,5 +42,6 @@ jobs:
             echo "$ ${*@Q}" >&2
             "$@"
           }
+          shopt -s nullglob
 
           run niv show
