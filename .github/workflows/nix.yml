@@ -33,7 +33,5 @@ jobs:
         run: |
           set -euo pipefail
 
-          export NIX_PATH=$(jq -r .nixpkgs.url ./nix/sources.json)
-
-          nix-shell --run "echo OK"
+          nix-shell -I nixpkgs=$(jq -r .nixpkgs.url ./nix/sources.json) --run "echo OK"
 
