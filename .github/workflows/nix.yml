@@ -35,7 +35,7 @@ jobs:
 
           ls -la
 
-          which run 2>&1 | tee /dev/null
+          # which run 2>&1 | tee /dev/null
 
           nix-shell --run "which run"
 
