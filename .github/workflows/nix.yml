@@ -30,7 +30,7 @@ jobs:
       - run: |
           nix-shell
           which jq
-          which niv
+          ls -al /nix/store
           # niv show
           # greet
           # run
