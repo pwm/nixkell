@@ -33,4 +33,6 @@ jobs:
         run: |
           set -euo pipefail
 
-          nix-shell -I nixpkgs=$(jq -r .nixpkgs.url ./nix/sources.json) -p direnv --run "./init.sh"
+          export NIX_PATH=nixpkgs=$(jq -r .nixpkgs.url ./nix/sources.json)
+
+          nix-shell -p direnv --run "./init.sh"
