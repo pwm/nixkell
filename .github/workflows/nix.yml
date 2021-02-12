@@ -11,7 +11,7 @@ jobs:
       matrix:
         os:
           - ubuntu-18.04
-          # - macOS-latest
+          - macOS-latest
 
     steps:
       - uses: actions/checkout@v2
@@ -28,15 +28,4 @@ jobs:
 
       - name: Run
         run: |
-          set -euo pipefail
-
-          # export NIX_PATH=nixpkgs=$(jq -r .nixpkgs.url ./nix/sources.json)
-
           nix-shell --run "run"
-
-          # ls -la
-
-          # nix-shell -p direnv --run "ls -al; which direnv; ./init.sh"
-
-          # ls -la
-          # echo "OK"
