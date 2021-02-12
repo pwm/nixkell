@@ -24,5 +24,13 @@ jobs:
       - name: Pull nix-build-uncached
         run: nix-build nix -A nix-build-uncached
 
-      - name: Build release
+      - name: Build
         run: result/bin/nix-build-uncached ./nix/release.nix
+
+      - run: nix-shell --run "echo OK"
+
+      - name: Run
+        run: |
+          set -euo pipefail
+          eval "$(nix-shell --run "declare -x")"
+          run
