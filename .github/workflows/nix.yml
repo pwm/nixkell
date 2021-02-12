@@ -29,6 +29,10 @@ jobs:
         run: |
           result/bin/nix-build-uncached ./nix/release.nix
 
+      - name: Pre-load the nix-shell dependencies
+        run: |
+          nix-shell --run "echo OK"
+
       - name: Run
         run: |
           set -euo pipefail
