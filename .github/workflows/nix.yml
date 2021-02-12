@@ -22,20 +22,21 @@ jobs:
             log-lines = 1000
 
       - name: Pull nix-build-uncached
-        run: nix-build nix -A nix-build-uncached
+        run: |
+          nix-build nix -A nix-build-uncached
 
       - name: Build
-        run: result/bin/nix-build-uncached ./nix/release.nix
+        run: |
+          result/bin/nix-build-uncached ./nix/release.nix
 
+      - name: Run
       - run: |
-          nix-shell --run "niv show"
-          nix-shell --run "run"
-          # niv show
-          # greet
-          # run
+          set -euo pipefail
+          eval "$(nix-shell --run "declare -x")"
 
-      # - name: Run
-      #   run: |
-      #     set -euo pipefail
-      #     eval "$(nix-shell --run "declare -x")"
-      #     run
+          run() {
+            echo "$ ${*@Q}" >&2
+            "$@"
+          }
+
+          run niv show
