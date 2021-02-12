@@ -16,25 +16,21 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: cachix/install-nix-action@v12
+      - name: Install Nix
+        uses: cachix/install-nix-action@v12
         with:
           extra_nix_config: |
             log-lines = 1000
 
-      # - name: Pull nix-build-uncached
-      #   run: |
-      #     nix-build nix -A nix-build-uncached
-
       - name: Build
         run: |
           nix-build ./nix/release.nix
-          # result/bin/nix-build-uncached ./nix/release.nix
 
       - name: Run
         run: |
           set -euo pipefail
 
-          export NIX_PATH=nixpkgs=$(jq -r .nixpkgs.url ./nix/sources.json)
+          # export NIX_PATH=nixpkgs=$(jq -r .nixpkgs.url ./nix/sources.json)
 
           nix-shell --run "run"
 
