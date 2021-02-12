@@ -35,9 +35,8 @@ jobs:
 
           ls -la
 
-          which run
+          which run 2>&1 | tee /dev/null
 
           nix-shell --run "which run"
 
           # nix-shell -I nixpkgs=$(jq -r .nixpkgs.url ./nix/sources.json) --run "which run"
-
