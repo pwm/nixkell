@@ -31,7 +31,8 @@ sed -i "s/replaceme/$project_name/g" ./package.yaml
 sed -i "s/replaceme/$project_name/g" ./bin/Main.hs
 
 # Fire up the nix shell
+echo -e "use nix\nwatch_file nixkell.toml" > .envrc
 direnv allow .
 
 # Finally delete this script
-rm -f init
+rm -f init.sh
