@@ -36,4 +36,9 @@ jobs:
 
           export NIX_PATH=nixpkgs=$(jq -r .nixpkgs.url ./nix/sources.json)
 
-          nix-shell -p direnv --run "./init.sh"
+          ls -la
+
+          nix-shell -p direnv --run "ls -al; which direnv; ./init.sh"
+
+          ls -la
+          echo "OK"
