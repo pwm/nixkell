@@ -29,9 +29,11 @@ jobs:
 
       - run: |
           nix-shell
-          niv show
-          greet
-          run
+          which jq
+          which niv
+          # niv show
+          # greet
+          # run
 
       # - name: Run
       #   run: |
