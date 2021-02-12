@@ -34,5 +34,5 @@ jobs:
           set -euo pipefail
 
           nix_path=$(jq -r .nixpkgs.url ./nix/sources.json)
-          echo $nix_path
+          nix-shell -I $nix_path --run "echo OK"
 
