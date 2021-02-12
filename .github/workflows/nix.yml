@@ -31,10 +31,6 @@ jobs:
 
       - name: Run
         run: |
-          # ./init.sh
           set -euo pipefail
 
-          ls -al
-          nix-shell --run "ls -al"
-
-          # nix-shell -I nixpkgs=$(jq -r .nixpkgs.url ./nix/sources.json) --run "which run"
+          nix-shell -I nixpkgs=$(jq -r .nixpkgs.url ./nix/sources.json) -p direnv --run "./init.sh"
