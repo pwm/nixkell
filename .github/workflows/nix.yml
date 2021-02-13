@@ -22,6 +22,11 @@ jobs:
           extra_nix_config: |
             log-lines = 1000
 
+      - uses: cachix/cachix-action@v8
+        with:
+          name: pwm
+          signingKey: "${{ secrets.CACHIX_SIGNING_KEY }}"
+
       - name: Build
         run: |
           nix-build ./nix/release.nix
