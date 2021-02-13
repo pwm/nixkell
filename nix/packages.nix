@@ -8,7 +8,7 @@ let
         depsFromDir = haskell.lib.packagesFromDirectory {
           directory = ./packages;
         };
-        ourPkg = _hfinal: hprev: {
+        manual = _hfinal: hprev: {
           replaceme =
             let
               filteredSrc = util.filterSrc ../. {
@@ -19,7 +19,7 @@ let
             hprev.callCabal2nix "replaceme" filteredSrc { };
         };
       in
-      lib.composeExtensions depsFromDir ourPkg;
+      lib.composeExtensions depsFromDir manual;
   };
 
   ghc = haskellPackages.ghc.withPackages (_ps:
