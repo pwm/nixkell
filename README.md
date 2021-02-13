@@ -44,7 +44,7 @@ It gets even better. Building the project itself happens the same way with the s
 
 ### 4. Binary caches
 
-You guessed it right, it gets even better. As a consequence of reproducibility, people can push the result of their builds into shared binary caches so that others can pull it, saving a ton of time not having to build it themselves. This is how the 80,000+ strong nixpkgs are distributed via `cache.nixos.org` while services like [Cachix](https://cachix.org/) are binary caches as a service.
+You guessed it right, it gets even better. As a consequence of reproducibility, people can push the result of their builds into shared binary caches so that others can pull it, saving a ton of time not having to build it themselves. This is how the 80,000+ strong nixpkgs are distributed from `cache.nixos.org` while "binary cache as a service" solutions, like [Cachix](https://cachix.org/), are lifting productivity to new levels.
 
 I hope this quick sales pitch convinces you to give Nix and Nixkell a try.
 
