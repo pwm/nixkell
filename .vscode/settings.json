@@ -1,0 +1,4 @@
+{
+  "nixEnvSelector.nixShellConfig": "${workspaceRoot}/shell.nix",
+  "haskell.serverExecutablePath": "haskell-language-server"
+}

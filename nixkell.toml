@@ -21,4 +21,5 @@ files = [
 ]
 paths = [
   ".github",
+  ".vscode",
 ]
