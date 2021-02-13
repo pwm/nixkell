@@ -91,13 +91,13 @@ A sensible next step is to open up `nixkell.toml` in which you will see a few op
 - A greeting whenever you enter the nix shell :)
 - The version of GHC
 - Tooling you'd like available in the nix shell
-- A set files and paths to ignore by `nix-build`, meaning that nix won't rebuild anything when you change them.
+- A set of files and paths to ignore by `nix-build`, meaning that nix won't rebuild anything when you change them.
 
-Direnv (via `.envrc`) is watching `nixkell.toml` and will automatically rebuild your nix shell whenever you edit it, say add new tool to your env.
+Direnv (via `.envrc`) is watching `nixkell.toml` and will automatically rebuild your nix shell whenever you edit it, say add new tooling to your env.
 
 If you look in `nix/scripts.nix` you will see 3 tiny scripts, one being `greet` from above to print your greeting. The other two are `build` which is shorthand for `nix-build nix/release.nix` and `run` which is shorthand for `result/bin/my-project`. You can think of them as Nixkell's equivalent of `cabal build` and `cabal run my-project`.
 
-By default wee have `package.yaml` to manage project dependencies, however if you rather use `my-project.cabal` then just run `hpack`, which is available in the nix shell.
+By default we have `package.yaml` to manage project dependencies, however if you rather use `my-project.cabal` then just run `hpack`, which is available in the nix shell.
 
 Cabal by default is also in the nix shell so you can  use that instead of nix to build and run your project if you like:
 
@@ -106,7 +106,7 @@ $ cabal build
 $ cabal run my-project
 ```
 
-If you look into `nix/sources.json` you will see that they are pinned to exact git hashes. Reproducibility, yay! The sources file is managed by [niv](https://github.com/nmattia/niv), another tool in our nix shell. Please read how to use it eg. to bump source pins.
+If you look into `nix/sources.json` you will see that they are pinned to exact git hashes. Reproducibility, yay! The sources file is managed by [niv](https://github.com/nmattia/niv), another tool in our nix shell. Please read up on how to use it eg. to bump source pins (hint: `niv update`).
 
 As a bonus you also have a nixified CI for github actions ready to rock under `.github`. Note: `init.sh` comments out the cachix action. To use it you need to create a cachix account and add your signing key to the repo secrets.
 
@@ -121,7 +121,7 @@ Finally a few words about the `nix/` directory itself:
 - `util.nix` - some helper functions
 - `shell.nix` (in the root) - entyr point to the nix shell. Called by direnv upon entering the directory.
 
-That's all there is to it really. 
+That's all there is to it really. Happy hacking!
 
 ## Learn some Nix
 
