@@ -1,6 +1,6 @@
 { pkgs }:
 let
-  util = (import ./util.nix { inherit (pkgs) lib gitignoreFilter; });
+  util = import ./util.nix { inherit (pkgs) lib gitignoreFilter; };
 
   conf = pkgs.lib.importTOML ../nixkell.toml;
 
