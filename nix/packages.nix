@@ -2,8 +2,11 @@
 let
   util = import ./util.nix { inherit (pkgs) lib gitignoreFilter; };
 
+  scripts = import ./scripts.nix { inherit pkgs conf; };
+
   conf = pkgs.lib.importTOML ../nixkell.toml;
 
+  # Add our package to haskellPackages
   haskellPackages = pkgs.haskell.packages.${("ghc" + util.removeDot conf.env.ghc)}.override {
     overrides =
       let
@@ -24,11 +27,10 @@ let
       pkgs.lib.composeExtensions depsFromDir manual;
   };
 
+  # Include our package dependencies with ghc
   ghc = haskellPackages.ghc.withPackages (_ps:
     pkgs.haskell.lib.getHaskellBuildInputs haskellPackages.replaceme
   );
-
-  scripts = pkgs.callPackage ./scripts.nix { inherit conf; };
 in
 {
   bin = haskellPackages.replaceme;
