@@ -2,12 +2,12 @@
 let
   pkgs = import ./nix { inherit system; };
 in
-with pkgs; mkShell {
+pkgs.mkShell {
   buildInputs = [
-    replaceme.shell
+    pkgs.replaceme.shell
   ];
   shellHook = ''
-    export LD_LIBRARY_PATH=${replaceme.shell}/lib:$LD_LIBRARY_PATH
+    export LD_LIBRARY_PATH=${pkgs.replaceme.shell}/lib:$LD_LIBRARY_PATH
     greet
   '';
 }

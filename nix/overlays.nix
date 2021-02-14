@@ -1,12 +1,12 @@
 { sources }:
 [
-  (final: _prev: {
-    inherit (import sources.gitignore { inherit (final) lib; }) gitignoreFilter;
+  (final: prev: {
+    inherit (import sources.gitignore { inherit (prev) lib; }) gitignoreFilter;
   })
-  (final: _prev: {
-    util = (import ./util.nix { inherit (final) lib gitignoreFilter; });
+  (final: prev: {
+    util = (import ./util.nix { inherit (prev) lib gitignoreFilter; });
   })
-  (final: _prev: {
-    replaceme = (import ./packages.nix { pkgs = final; });
+  (final: prev: {
+    replaceme = (import ./packages.nix { pkgs = prev; });
   })
 ]
