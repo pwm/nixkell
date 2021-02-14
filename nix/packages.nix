@@ -1,6 +1,6 @@
 { pkgs }:
 let
-  util = pkgs.util;
+  util = (import ./util.nix { inherit (pkgs) lib gitignoreFilter; });
 
   conf = pkgs.lib.importTOML ../nixkell.toml;
 
@@ -35,6 +35,6 @@ in
 
   shell = pkgs.buildEnv {
     name = "replaceme-env";
-    paths = [ ghc ] ++ pkgs.util.getFrom pkgs conf.env.packages ++ scripts;
+    paths = [ ghc ] ++ util.getFrom pkgs conf.env.packages ++ scripts;
   };
 }
