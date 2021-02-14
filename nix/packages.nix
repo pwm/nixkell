@@ -1,38 +1,40 @@
-{ pkgs }: with pkgs;
+{ pkgs }:
 let
-  nixkellConfig = lib.importTOML ../nixkell.toml;
+  util = pkgs.util;
 
-  haskellPackages = haskell.packages.${("ghc" + util.removeDot nixkellConfig.env.ghc)}.override {
+  conf = pkgs.lib.importTOML ../nixkell.toml;
+
+  haskellPackages = pkgs.haskell.packages.${("ghc" + util.removeDot conf.env.ghc)}.override {
     overrides =
       let
-        depsFromDir = haskell.lib.packagesFromDirectory {
+        depsFromDir = pkgs.haskell.lib.packagesFromDirectory {
           directory = ./packages;
         };
         manual = _hfinal: hprev: {
           replaceme =
             let
               filteredSrc = util.filterSrc ../. {
-                ignoreFiles = nixkellConfig.ignore.files;
-                ignorePaths = nixkellConfig.ignore.paths;
+                ignoreFiles = conf.ignore.files;
+                ignorePaths = conf.ignore.paths;
               };
             in
             hprev.callCabal2nix "replaceme" filteredSrc { };
         };
       in
-      lib.composeExtensions depsFromDir manual;
+      pkgs.lib.composeExtensions depsFromDir manual;
   };
 
   ghc = haskellPackages.ghc.withPackages (_ps:
-    haskell.lib.getHaskellBuildInputs haskellPackages.replaceme
+    pkgs.haskell.lib.getHaskellBuildInputs haskellPackages.replaceme
   );
 
-  scripts = callPackage ./scripts.nix { inherit nixkellConfig; };
+  scripts = pkgs.callPackage ./scripts.nix { inherit conf; };
 in
 {
   bin = haskellPackages.replaceme;
 
-  shell = buildEnv {
+  shell = pkgs.buildEnv {
     name = "replaceme-env";
-    paths = util.getFrom pkgs nixkellConfig.env.packages ++ scripts;
+    paths = [ ghc ] ++ pkgs.util.getFrom pkgs conf.env.packages ++ scripts;
   };
 }

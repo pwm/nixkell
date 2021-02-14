@@ -1,9 +1,9 @@
-{ pkgs, nixkellConfig }:
+{ pkgs, conf }:
 let
   greet = pkgs.writeShellScriptBin "greet" ''
     set -euo pipefail
     echo -e "\n$(tput setaf 2)"
-    echo "${nixkellConfig.greet}" | ${pkgs.figlet}/bin/figlet
+    echo "${conf.greet}" | ${pkgs.figlet}/bin/figlet
     echo -e "$(tput sgr0)\n"
   '';
   build = pkgs.writeShellScriptBin "build" ''
