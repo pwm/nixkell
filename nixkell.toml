@@ -1,7 +1,5 @@
 # Nixkell config
 
-greet = "Nixkell"
-
 ghc = "8.10.4"
 
 [env]
@@ -11,6 +9,7 @@ tools = [
   "haskellPackages.implicit-hie",
   "hlint",
   "niv",
+  "nixpkgs-fmt",
   "ormolu",
 ]
 

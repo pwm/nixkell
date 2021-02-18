@@ -37,7 +37,7 @@ let
 
   tools = util.buildWith ourHaskell [ "haskell-language-server" ] conf.env.tools;
 
-  scripts = import ./scripts.nix { inherit pkgs conf; };
+  scripts = import ./scripts.nix { inherit pkgs; };
 in
 {
   bin = util.leanPkg ourHaskell.replaceme;
