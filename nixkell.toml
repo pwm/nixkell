@@ -2,9 +2,10 @@
 
 greet = "Nixkell"
 
+ghc = "8.10.4"
+
 [env]
-ghc = "8.10.3"
-packages = [
+tools = [
   "cabal-install",
   "haskell-language-server",
   "haskellPackages.implicit-hie",
