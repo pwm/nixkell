@@ -71,14 +71,21 @@ $ nix-env -iA nixpkgs.direnv
 
 3. Once direnv is installed you need to [enable it](https://direnv.net/docs/hook.html)  in your shell!
 
+4. Optional: Install [cachix](https://cachix.org/) to take advantage of Nixkell's own binary cache:
+
+```
+$ nix-env -iA cachix -f https://cachix.org/api/v1/install
+$ cachix use nixkell
+```
+
 ## How it all works?
 
 Let's start with `./init.sh`. The purpose of this one-off script is to turn the cloned Nixkell repository into your own. It will:
 
-- Delete the `.git` directory (after making sure it's really Nixkell's)
+- Delete the `.git` directory (after making sure it's really Nixkell's) and initiate a new repo
 - Reset `README.md` to an empty one with your project's name
 - Set your project's name in all relevant files
-- Create an `.envrc` file telling direnv to use nix
+- Create an `.envrc` file telling direnv to use nix and watch `nixkell.toml` and `nix/sources.json`
 - Fire up the nix shell (this could take a while...)
 - Finally delete itself (as you won't need it anymore)
 
@@ -86,29 +93,36 @@ The result is a new haskell project, ready for you to get hacking!
 
 From now on every time you enter the project directory direnv will automatically enter the nix shell. Fair warning: Once you get used to this there is no turning back :)
 
-A sensible next step is to open up `nixkell.toml` in which you will see a few options to configure your env and project. These are:
+A sensible next step is to open up `nixkell.toml`, the config file, in which you will see a few options to configure. These are:
 
-- A greeting whenever you enter the nix shell :)
 - The version of GHC
-- Tooling you'd like available in the nix shell
+- Tooling you'd like available in your nix shell
 - A set of files and paths to ignore by `nix-build`, meaning that nix won't rebuild anything when you change them.
 
 Direnv (via `.envrc`) is watching `nixkell.toml` and will automatically rebuild your nix shell whenever you edit it, say add new tooling to your env.
 
-If you look in `nix/scripts.nix` you will see 3 tiny scripts, one being `greet` from above to print your greeting. The other two are `build` which is shorthand for `nix-build nix/release.nix` and `run` which is shorthand for `result/bin/my-project`. You can think of them as Nixkell's equivalent of `cabal build` and `cabal run my-project`.
+If you look in `nix/scripts.nix` you will see 3 tiny scripts. One is `logo` that prints a logo every time you enter the nix shell. The other two are `build` which is shorthand for `nix-build nix/release.nix` and `run` which is shorthand for `result/bin/my-project`. You can think of them as Nixkell's equivalent of `cabal build` and `cabal run my-project`.
 
 By default we have `package.yaml` to manage project dependencies, however if you rather use `my-project.cabal` then just run `hpack`, which is available in the nix shell.
 
-Cabal by default is also in the nix shell so you can  use that instead of nix to build and run your project if you like:
+Cabal by default is also in the nix shell and can be used as usual:
 
 ```
 $ cabal build
 $ cabal run my-project
 ```
 
-If you look into `nix/sources.json` you will see that they are pinned to exact git hashes. Reproducibility, yay! The sources file is managed by [niv](https://github.com/nmattia/niv), another tool in our nix shell. Please read up on how to use it eg. to bump source pins (hint: `niv update`).
+Note: Whilst Nix builds are reproducible, they are not incremental. For local development using Cabal arguably leads to a nicer user experiencee as it is incremental, meaning it will only rebuild what's necessary after a change. For small project it won't matter much whether you use nix (via `build`) or Cabal but for larger projects incremental rebuilds and thus Cabal is preferred for local development.
 
-As a bonus you also have a nixified CI for github actions ready to rock under `.github`. Note: `init.sh` comments out the cachix action. To use it you need to create a cachix account and add your signing key to the repo secrets.
+If you look into `nix/sources.json` you will see that they are pinned to exact git hashes. Reproducibility, yay! The sources file is managed by [niv](https://github.com/nmattia/niv), another tool in our nix shell. To update sources and thus rebuild your shell (as direnv is watching `nix/sources.json`):
+
+```
+$ niv update
+```
+
+As a bonus you also have a nixified CI for github actions ready to rock under `.github`.
+
+Note: `init.sh` comments out the cachix action. To use it you need to create a cachix account and add your signing key to the repo secrets.
 
 Finally a few words about the `nix/` directory itself:
 
@@ -116,9 +130,9 @@ Finally a few words about the `nix/` directory itself:
 - `overlays.nix` - extends nixpkgs, most importantly with our own
 - `packages.nix` - The meat, where our package is being assembled
 - `release.nix` - points to our package, used by `build`
-- `scripts.nix` - home for `build`, `run` and `greet`
+- `scripts.nix` - home for `build`, `run` and `logo`
 - `sources.{json,nix}` - generated by Niv
-- `util.nix` - some helper functions
+- `util.nix` - helper functions
 - `shell.nix` (in the root) - entry point to the nix shell. Called by direnv upon entering the directory.
 
 That's all there is to it really. Happy hacking!

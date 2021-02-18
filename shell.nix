@@ -8,6 +8,6 @@ pkgs.mkShell {
   ];
   shellHook = ''
     export LD_LIBRARY_PATH=${pkgs.replaceme.shell}/lib:$LD_LIBRARY_PATH
-    greet
+    logo
   '';
 }
