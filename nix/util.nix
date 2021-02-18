@@ -27,4 +27,10 @@
       else lib.getAttrFromPath (lib.splitString "." path) pkgs
     )
     paths;
+
+  leanPkg =
+    let
+      hl = pkgs.haskell.lib;
+    in
+    pkg: hl.dontHyperlinkSource (hl.disableLibraryProfiling (hl.dontCoverage (hl.dontHaddock pkg)));
 }
