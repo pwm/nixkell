@@ -1,13 +1,13 @@
 { pkgs }:
 let
-  util = import ./util.nix { inherit (pkgs) lib gitignoreFilter; };
+  lib = pkgs.lib;
 
-  scripts = import ./scripts.nix { inherit pkgs conf; };
+  util = import ./util.nix { inherit pkgs; inherit (pkgs) lib gitignoreFilter; };
 
-  conf = pkgs.lib.importTOML ../nixkell.toml;
+  conf = lib.importTOML ../nixkell.toml;
 
-  # Add our package to haskellPackages
-  haskellPackages = pkgs.haskell.packages.${("ghc" + util.removeDot conf.env.ghc)}.override {
+  # Create our haskell from the choosen version of the default one
+  ourHaskell = pkgs.haskell.packages.${("ghc" + util.removeDot conf.ghc)}.override {
     overrides =
       let
         depsFromDir = pkgs.haskell.lib.packagesFromDirectory {
@@ -24,19 +24,23 @@ let
             hprev.callCabal2nix "replaceme" filteredSrc { };
         };
       in
-      pkgs.lib.composeExtensions depsFromDir manual;
+      lib.composeExtensions depsFromDir manual;
   };
 
   # Include our package dependencies with ghc
-  ghc = haskellPackages.ghc.withPackages (_ps:
-    pkgs.haskell.lib.getHaskellBuildInputs haskellPackages.replaceme
+  ghc = ourHaskell.ghc.withPackages (_ps:
+    pkgs.haskell.lib.getHaskellBuildInputs ourHaskell.replaceme
   );
+
+  tools = util.buildWith ourHaskell [ "haskell-language-server" ] conf.env.tools;
+
+  scripts = import ./scripts.nix { inherit pkgs conf; };
 in
 {
-  bin = haskellPackages.replaceme;
+  bin = ourHaskell.replaceme;
 
   shell = pkgs.buildEnv {
     name = "replaceme-env";
-    paths = [ ghc ] ++ util.getFrom pkgs conf.env.packages ++ scripts;
+    paths = [ ghc ] ++ tools ++ scripts;
   };
 }

@@ -1,9 +1,8 @@
-{ lib, gitignoreFilter }:
+{ pkgs, lib, gitignoreFilter }:
 {
   removeDot = n: lib.replaceStrings [ "." ] [ "" ] n;
 
-  getFrom = set: ns: map (n: lib.getAttrFromPath (lib.splitString "." n) set) ns;
-
+  # Filter .gitignored and manually specified files/paths
   filterSrc = path: { ignoreFiles ? [ ], ignorePaths ? [ ] }:
     lib.cleanSourceWith {
       src = path;
@@ -17,4 +16,15 @@
           && ! builtins.elem (baseNameOf path) ignoreFiles
           && ! lib.any (d: lib.hasPrefix d (relToPath path)) ignorePaths;
     };
+
+  # Build with our haskell instead of the stock for selected packages
+  buildWith = ourHaskell: names: paths: map
+    (path:
+      let fNames = lib.filter (name: lib.hasSuffix name path) names;
+      in
+      if fNames != [ ]
+      then ourHaskell.${(builtins.head fNames)}
+      else lib.getAttrFromPath (lib.splitString "." path) pkgs
+    )
+    paths;
 }
