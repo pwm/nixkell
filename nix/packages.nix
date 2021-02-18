@@ -2,7 +2,10 @@
 let
   lib = pkgs.lib;
 
-  util = import ./util.nix { inherit pkgs; inherit (pkgs) lib gitignoreFilter; };
+  util = import ./util.nix {
+    inherit pkgs;
+    inherit (pkgs) lib gitignoreFilter;
+  };
 
   conf = lib.importTOML ../nixkell.toml;
 
@@ -37,7 +40,7 @@ let
   scripts = import ./scripts.nix { inherit pkgs conf; };
 in
 {
-  bin = ourHaskell.replaceme;
+  bin = util.leanPkg ourHaskell.replaceme;
 
   shell = pkgs.buildEnv {
     name = "replaceme-env";
