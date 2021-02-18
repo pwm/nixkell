@@ -30,8 +30,8 @@ jobs:
 
       - uses: cachix/cachix-action@v8
         with:
-          name: pwm
-          signingKey: "${{ secrets.CACHIX_SIGNING_KEY }}"
+          name: nixkell
+          signingKey: "${{ secrets.CACHIX_AUTH_TOKEN }}"
 
       - name: Build
         run: |
