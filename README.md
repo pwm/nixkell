@@ -108,6 +108,7 @@ By default we have `package.yaml` to manage project dependencies, however if you
 Cabal by default is also in the nix shell and can be used as usual:
 
 ```
+$ hpack
 $ cabal build
 $ cabal run my-project
 ```
