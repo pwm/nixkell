@@ -31,7 +31,7 @@ jobs:
       - uses: cachix/cachix-action@v8
         with:
           name: nixkell
-          signingKey: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
 
       - name: Build
         run: |
