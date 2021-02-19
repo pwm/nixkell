@@ -136,7 +136,9 @@ Finally a few words about the `nix/` directory itself:
 - `util.nix` - helper functions
 - `shell.nix` (in the root) - entry point to the nix shell. Called by direnv upon entering the directory.
 
-That's all there is to it really. Happy hacking!
+That's all there is to it really. Ultimately Nixkell is just a starting point. Once set up it's up to you to mould it to whatever shape your project dictates. It is also less than 200 lines of Nix code, making it easy to just dig in and learn a bit about Nix.
+
+Happy hacking!
 
 ## Learn some Nix
 
