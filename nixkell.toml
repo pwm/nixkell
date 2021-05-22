@@ -1,18 +1,27 @@
 # Nixkell config
 
+# Warning: if you don't choose one from the currently available versions
+# https://github.com/NixOS/nixpkgs/tree/master/pkgs/development/compilers/ghc
+# you will most likely have to compile *everything* yourself.
 ghc = "8.10.4"
 
+# List of tools to be available in the nix shell.
+# Add or remove as you please.
 [env]
 tools = [
   "cabal-install",
+  "cabal2nix",
   "haskell-language-server",
   "haskellPackages.implicit-hie",
   "hlint",
+  "hpack",
   "niv",
   "nixpkgs-fmt",
   "ormolu",
 ]
 
+# These files and directories will be excluded from the nix build.
+# This means there is no rebuild when changing these.
 [ignore]
 files = [
   "README.md",
