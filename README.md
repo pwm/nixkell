@@ -26,7 +26,7 @@ Hello world!
 * [Prerequisites](#prerequisites)
 * [How to install](#how-to-install)
 * [How to use](#how-to-use)
-* [How it is puut together](#how-it-is-put-together)
+* [How it works](#how-it-works)
 * [Learn some Nix!](#learn-some-nix)
 * [Licence](#licence)
 
@@ -97,7 +97,7 @@ The purpose of `init.sh` is to turn the cloned Nixkell repository into your own.
 - Delete the `.git` directory (after making sure it's really Nixkell's) and initiate a new repo
 - Reset `README.md` to an empty one with your project's name
 - Set your project's name (my-project in the example) in all relevant files
-- Create an `.envrc` file telling direnv to use nix and watch `nixkell.toml` and `nix/sources.json` for changes
+- Create an `.envrc` file telling direnv to use nix and watch `nixkell.toml`, `package.yaml` and `nix/*` for changes
 - Fire up the nix shell (note: this can take a while...)
 - Finally it deletes itself as you won't need it anymore
 
@@ -109,12 +109,12 @@ From now on, every time you enter the project's directory direnv will automatica
 
 ### Direnv
 
-Other than loading the nix shell direnv also watches some files (via `.envrc`) so when those files are changed direnv will automatically rebuild your shell to reflect those changes. If you want to manually reload just do:
+Other than loading the nix shell direnv also watches some files (via `.envrc`) so when those files are changed direnv will automatically rebuild your shell to reflect those changes. If, for any reason, you want to manually reload:
 ```
 $ direnv reload
 ```
 
-### Config
+### Nixkell's config
 
 A sensible next step is to open up `nixkell.toml`, Nixkell's config file, which is one of the files direnv watches. In there you will see a few options:
 
@@ -140,7 +140,7 @@ $ cabal test --test-show-details=direct
 
 To add dependencies just put them into `package.yaml` as usual and direnv will rebuild automatically.
 
-Side note: So why are we using cabal instead of nix to build you might ask? Well, why not both? :) Nix builds are reproducible which is amazing for all the reasons detailed in the elevator pitch and are ideal for eg. your CI (for an example check `.githubworkflows/nix.yml/`). On the other hand nix builds are not incremental whilst cabal builds are. Thus, for local development, cabal leads to a nicer user experience as it will only rebuild what's necessary after a change. If you look in `nix/scripts.nix` you will see a few small scripts, one of which is `build`, a shorthand for `nix-build nix/release.nix` and another is `run` which is shorthand for `result/bin/my-project`. There are Nixkell's equivalent of `cabal build` and `cabal run my-project`, respectively. To build and run your project with nix:
+Side note: So why are we using cabal instead of nix to build you might ask? Well, why not both? :) Nix builds are reproducible which is amazing for all the reasons detailed in the elevator pitch and are ideal for your CI. As an example check `.github/workflows/nix.yml`. On the other hand nix builds are not incremental whilst cabal builds are. Thus, for local development, cabal leads to a nicer user experience as it will only rebuild what's necessary after a change. If you look in `nix/scripts.nix` you will see a few small scripts, one of which is `build`, a shorthand for `nix-build nix/release.nix` and another is `run` which is shorthand for `result/bin/my-project`. There are Nixkell's equivalent of `cabal build` and `cabal run my-project`, respectively. To build and run your project with nix:
 ```
 $ hpack && build && run
 ```
@@ -158,21 +158,21 @@ cabal2nix https://github.com/some-user/some-package > nix/packages/some-package.
 
 In both cases direnv will rebuild automatically. This works thanks to the [packagesFromDirectory](https://github.com/NixOS/nixpkgs/blob/54d306ae9a5e53147dfa56ee2530aeb0da638b89/pkgs/development/haskell-modules/lib.nix#L391-L392) function  used in our `packages.nix`.
 
-To tweak things further you can add things to the manual section of `ourHaskell` in `packages.nix`, eg. remove version bound checks:
+To tweak things further you can add things to the manual section of `ourHaskell` in `packages.nix`, eg. say you want ot remove version bound checks on `some-package`:
 ```
 some-package = pkgs.haskell.lib.doJailbreak(hprev.some-package);
 ```
 
-### Updating
+### Updating nixpkgs
 
-If you look into `nix/sources.json` you will see that they are pinned to exact git hashes. Reproducibility, yay! The sources file is managed by [niv](https://github.com/nmattia/niv), another tool in our nix shell. To update sources and thus rebuild your shell (as direnv is watching `nix/sources.json`):
+If you look into `nix/sources.json` you will see that packages there are pinned to exact git hashes. Reproducibility, yay! The sources file itself is managed by [niv](https://github.com/nmattia/niv), another tool in our nix shell. To update sources and thus rebuild your shell (as direnv is watching `nix/sources.json`):
 ```
 $ niv update
 ```
 
-## How it is puut together
+## How it works
 
-Finally a few words about the `nix/` directory itself:
+Most of the nix code in in `nix/`:
 
 - `default.nix` - The `index.html` of the nix world. Called from `shell.nix` and `release.nix`
 - `overlays.nix` - extends nixpkgs, most importantly with our own
