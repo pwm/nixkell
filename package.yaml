@@ -32,6 +32,34 @@ tests:
     verbatim:
       build-tool-depends: hspec-discover:hspec-discover == 2.*
 
+default-extensions:
+  - BangPatterns
+  - BinaryLiterals
+  - DeriveAnyClass
+  - DeriveDataTypeable
+  - DeriveFoldable
+  - DeriveFunctor
+  - DeriveGeneric
+  - DeriveTraversable
+  - DerivingStrategies
+  - DerivingVia
+  - DuplicateRecordFields
+  - EmptyCase
+  - FlexibleContexts
+  - FlexibleInstances
+  - GeneralizedNewtypeDeriving
+  - InstanceSigs
+  - MultiParamTypeClasses
+  - MultiWayIf
+  - NamedFieldPuns
+  - NumericUnderscores
+  - LambdaCase
+  - OverloadedStrings
+  - ScopedTypeVariables
+  - StandaloneDeriving
+  - TupleSections
+  - TypeApplications
+
 ghc-options:
   - -Weverything
   - -Wno-missing-exported-signatures # missing-exported-signatures turns off the more strict -Wmissing-signatures.

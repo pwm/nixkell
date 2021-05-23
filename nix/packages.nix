@@ -9,7 +9,7 @@ let
 
   conf = lib.importTOML ../nixkell.toml;
 
-  # Create our haskell from the choosen version of the default one
+  # Create our own setup using our choosen GHC version as a starting point
   ourHaskell = pkgs.haskell.packages.${("ghc" + util.removeDot conf.ghc)}.override {
     overrides =
       let
@@ -30,11 +30,12 @@ let
       lib.composeExtensions depsFromDir manual;
   };
 
-  # Include our package dependencies with ghc
+  # Add our package with its dependencies to GHC
   ghc = ourHaskell.ghc.withPackages (_ps:
     pkgs.haskell.lib.getHaskellBuildInputs ourHaskell.replaceme
   );
 
+  # Ensure that HLS is compiled with our version of GHC
   tools = util.buildWith ourHaskell [ "haskell-language-server" ] conf.env.tools;
 
   scripts = import ./scripts.nix { inherit pkgs; };

@@ -1,8 +1,9 @@
 { pkgs, lib, gitignoreFilter }:
 {
-  removeDot = n: lib.replaceStrings [ "." ] [ "" ] n;
+  # Remove dots from strings
+  removeDot = s: lib.replaceStrings [ "." ] [ "" ] s;
 
-  # Filter .gitignored and manually specified files/paths
+  # Filter .gitignore as well as files and paths ignored in the nixkell config
   filterSrc = path: { ignoreFiles ? [ ], ignorePaths ? [ ] }:
     lib.cleanSourceWith {
       src = path;
@@ -28,6 +29,7 @@
     )
     paths;
 
+  # Speed up building by disabling a few steps
   leanPkg =
     let
       hl = pkgs.haskell.lib;

@@ -6,25 +6,31 @@ Get your Haskell projects up and running with no fuss using Nix.
 
 ## TL;DR
 
-Have [nix](https://nixos.org/) and [direnv](https://direnv.net/) installed and:
+Have [nix](https://nixos.org/) and [direnv](https://direnv.net/) installed:
 
 ```
-$ git clone https://github.com/pwm/nixkell.git my-project
-$ cd my-project
+$ git clone https://github.com/pwm/nixkell.git world && cd world
 $ ./init.sh
-$ build && run
-Hello my-project!
+$ hpack && cabal build
+$ cabal run world
+Hello world!
 ```
+
+<p align="center">
+  <img width="600" src="./assets/nixkell-600-12.gif?raw=true" alt="nixkell" />
+</p>
 
 ## Table of Contents
 
-* [Why Nixkell?](#why-nixkell)
-* [Prerequisites](#Prerequisites)
-* [How it all works?](#how-it-all-works)
+* [Elevator pitch](#elevator-pitch)
+* [Prerequisites](#prerequisites)
+* [How to install](#how-to-install)
+* [How to use](#how-to-use)
+* [How it is puut together](#how-it-is-put-together)
 * [Learn some Nix!](#learn-some-nix)
 * [Licence](#licence)
 
-## Why Nixkell?
+## Elevator pitch
 
 The aim of Nixkell is to provide a seamless experience setting up Haskell projects utilising Nix. 
 
@@ -32,21 +38,21 @@ There are other tools for setting up Haskell projects, some of them with great u
 
 ### 1. Nix shell
 
-Having a dedicated per-project shell with all the tooling required to work on the project is a game-changer. You can `cd foo-project` and have everything ready to work on `foo`, then `cd ../bar-project` and have everything at hand to work on `bar`. This applies even within a single project. For example would you like to quickly upgrade or downgrade the version of GHC to test something? In Nixkell just update it in `nixkell.toml`, do `build` and everything will automatically rebuild using the updated version.
+Having a dedicated per-project shell with all the tooling required to work on the project is a game-changer. You can `cd foo-project` and have everything ready to work on `foo`, then `cd ../bar-project` and have everything at hand to work on `bar`. This applies even within a single project. For example would you like to quickly upgrade or downgrade the version of GHC to test something? Just update it in `nixkell.toml`, `cabal build` and everything will automatically rebuild using the choosen version.
 
 ### 2. Nix shell for anyone else working on the project
 
-It gets better. Anyone working on the project will have the same nix shell and thus the exact same tooling available. As a consequence the bar for contribution becomes a lot lower, as simply pulling a repo and entering the nix shell sets the contributor up with everything they need to get hacking.
+It gets better. Anyone working on the project will have the same nix shell and thus the exact same tooling available. As a consequence the bar for contribution becomes a lot lower, as simply pulling a repo and entering nix shell sets the contributor up with everything they need to get hacking.
 
 ### 3. Reproducible builds
 
-It gets even better. Building the project itself happens the same way with the same dependencies pinned to the same versions all around. No more "Uhm, so how do I build this?".
+It gets even better. When building the project itself with nix it happens the same way with the same dependencies pinned to the same versions all around on everyone's machine. No more "Uhm, so how do I build this?".
 
 ### 4. Binary caches
 
-You guessed it right, it gets even better. As a consequence of reproducibility, people can push the result of their builds into shared binary caches so that others can pull it, saving a ton of time not having to build it themselves. This is how the 80,000+ strong nixpkgs are distributed from `cache.nixos.org` while "binary cache as a service" solutions, like [Cachix](https://cachix.org/), are lifting productivity to new levels.
+You guessed it right, it gets even better. As a consequence of reproducibility, people can push the result of their builds into shared binary caches where others can pull from, saving a ton of time not having to build it themselves. This is how the 80,000+ strong nixpkgs are distributed from `cache.nixos.org` while "binary cache as a service" solutions, like [Cachix](https://cachix.org/), are lifting productivity to new levels.
 
-I hope this quick sales pitch convinces you to give Nix and Nixkell a try.
+I hope these points convinces you to give Nix and Nixkell a try.
 
 ## Prerequisites
 
@@ -65,78 +71,119 @@ $ sh <(curl -L https://nixos.org/nix/install) --darwin-use-unencrypted-nix-store
 2. Verify nix and install [direnv](https://direnv.net/):
 
 ```
-$ nix-env --version
+$ nix --version
 $ nix-env -iA nixpkgs.direnv
 ```
 
-3. Once direnv is installed you need to [enable it](https://direnv.net/docs/hook.html)  in your shell!
+3. Once direnv is installed you need to [enable it](https://direnv.net/docs/hook.html) in your shell!
 
-4. Optional: Install [cachix](https://cachix.org/) to take advantage of Nixkell's own binary cache:
+4. Optional: You can install [cachix](https://cachix.org/) to take advantage of Nixkell's own binary cache:
 
 ```
 $ nix-env -iA cachix -f https://cachix.org/api/v1/install
 $ cachix use nixkell
 ```
 
-## How it all works?
+## How to install
 
-Let's start with `./init.sh`. The purpose of this one-off script is to turn the cloned Nixkell repository into your own. It will:
+```
+$ git clone https://github.com/pwm/nixkell.git my-project
+$ cd my-project
+$ ./init.sh
+```
+
+The purpose of `init.sh` is to turn the cloned Nixkell repository into your own. It will:
 
 - Delete the `.git` directory (after making sure it's really Nixkell's) and initiate a new repo
 - Reset `README.md` to an empty one with your project's name
-- Set your project's name in all relevant files
-- Create an `.envrc` file telling direnv to use nix and watch `nixkell.toml` and `nix/sources.json`
-- Fire up the nix shell (this could take a while...)
-- Finally delete itself (as you won't need it anymore)
+- Set your project's name (my-project in the example) in all relevant files
+- Create an `.envrc` file telling direnv to use nix and watch `nixkell.toml` and `nix/sources.json` for changes
+- Fire up the nix shell (note: this can take a while...)
+- Finally it deletes itself as you won't need it anymore
 
-The result is a new haskell project, ready for you to get hacking! 
+The end result is a new haskell project, ready for you to get hacking! 
 
-From now on every time you enter the project directory direnv will automatically enter the nix shell. Fair warning: Once you get used to this there is no turning back :)
+## How to use
 
-A sensible next step is to open up `nixkell.toml`, the config file, in which you will see a few options to configure. These are:
+From now on, every time you enter the project's directory direnv will automatically enter the nix shell. Fair warning: it is easy to get used to this :)
 
-- The version of GHC
+### Direnv
+
+Other than loading the nix shell direnv also watches some files (via `.envrc`) so when those files are changed direnv will automatically rebuild your shell to reflect those changes. If you want to manually reload just do:
+```
+$ direnv reload
+```
+
+### Config
+
+A sensible next step is to open up `nixkell.toml`, Nixkell's config file, which is one of the files direnv watches. In there you will see a few options:
+
+- The version of GHC to use
 - Tooling you'd like available in your nix shell
-- A set of files and paths to ignore by `nix-build`, meaning that nix won't rebuild anything when you change them.
+- A set of files and paths to ignore by `nix-build`, meaning that nix won't rebuild anything when you change these.
 
-Direnv (via `.envrc`) is watching `nixkell.toml` and will automatically rebuild your nix shell whenever you edit it, say add new tooling to your env.
+### Haskell
 
-If you look in `nix/scripts.nix` you will see 3 tiny scripts. One is `logo` that prints a logo every time you enter the nix shell. The other two are `build` which is shorthand for `nix-build nix/release.nix` and `run` which is shorthand for `result/bin/my-project`. You can think of them as Nixkell's equivalent of `cabal build` and `cabal run my-project`.
+By default Nixkell uses `package.yaml` to manage haskell dependencies and utilise `hpack` to compile it to cabal. If you rather use the cabal file directly then just run `hpack`, delete `package.yaml` and add the cabal file to `.envrc` for watching. I personally prefer editing the yaml file and auto-generate the cabal file but it's entirely optional.
 
-By default we have `package.yaml` to manage project dependencies, however if you rather use `my-project.cabal` then just run `hpack`, which is available in the nix shell.
-
-Cabal by default is also in the nix shell and can be used as usual:
-
+The usual build cycle is:
 ```
 $ hpack
 $ cabal build
 $ cabal run my-project
 ```
 
-Note: Whilst Nix builds are reproducible, they are not incremental. For local development using Cabal arguably leads to a nicer user experiencee as it is incremental, meaning it will only rebuild what's necessary after a change. For small project it won't matter much whether you use nix (via `build`) or Cabal but for larger projects incremental rebuilds and thus Cabal is preferred for local development.
+To test:
+```
+$ cabal test --test-show-details=direct
+```
+
+To add dependencies just put them into `package.yaml` as usual and direnv will rebuild automatically.
+
+Side note: So why are we using cabal instead of nix to build you might ask? Well, why not both? :) Nix builds are reproducible which is amazing for all the reasons detailed in the elevator pitch and are ideal for eg. your CI (for an example check `.githubworkflows/nix.yml/`). On the other hand nix builds are not incremental whilst cabal builds are. Thus, for local development, cabal leads to a nicer user experience as it will only rebuild what's necessary after a change. If you look in `nix/scripts.nix` you will see a few small scripts, one of which is `build`, a shorthand for `nix-build nix/release.nix` and another is `run` which is shorthand for `result/bin/my-project`. There are Nixkell's equivalent of `cabal build` and `cabal run my-project`, respectively. To build and run your project with nix:
+```
+$ hpack && build && run
+```
+
+### Direct hackage/github dependencies
+
+To add something directly from hackage:
+```
+cabal2nix cabal://some-package-1.2.3.4 > nix/packages/some-package.nix
+```
+To add something directly from github:
+```
+cabal2nix https://github.com/some-user/some-package > nix/packages/some-package.nix
+```
+
+In both cases direnv will rebuild automatically. This works thanks to the [packagesFromDirectory](https://github.com/NixOS/nixpkgs/blob/54d306ae9a5e53147dfa56ee2530aeb0da638b89/pkgs/development/haskell-modules/lib.nix#L391-L392) function  used in our `packages.nix`.
+
+To tweak things further you can add things to the manual section of `ourHaskell` in `packages.nix`, eg. remove version bound checks:
+```
+some-package = pkgs.haskell.lib.doJailbreak(hprev.some-package);
+```
+
+### Updating
 
 If you look into `nix/sources.json` you will see that they are pinned to exact git hashes. Reproducibility, yay! The sources file is managed by [niv](https://github.com/nmattia/niv), another tool in our nix shell. To update sources and thus rebuild your shell (as direnv is watching `nix/sources.json`):
-
 ```
 $ niv update
 ```
 
-As a bonus you also have a nixified CI for github actions ready to rock under `.github`.
-
-Note: `init.sh` comments out the cachix action. To use it you need to create a cachix account and add your signing key to the repo secrets.
+## How it is puut together
 
 Finally a few words about the `nix/` directory itself:
 
 - `default.nix` - The `index.html` of the nix world. Called from `shell.nix` and `release.nix`
 - `overlays.nix` - extends nixpkgs, most importantly with our own
 - `packages.nix` - The meat, where our package is being assembled
-- `release.nix` - points to our package, used by `build`
+- `release.nix` - points to our package, used by the `build` script
 - `scripts.nix` - home for `build`, `run` and `logo`
 - `sources.{json,nix}` - generated by Niv
-- `util.nix` - helper functions
+- `util.nix` - some internal helper functions
 - `shell.nix` (in the root) - entry point to the nix shell. Called by direnv upon entering the directory.
 
-That's all there is to it really. Ultimately Nixkell is just a starting point. Once set up it's up to you to mould it to whatever shape your project dictates. It is also less than 200 lines of Nix code, making it easy to just dig in and learn a bit about Nix.
+That's all there is to it really. Ultimately Nixkell is just a skeleton, a starting point. Once set up it's up to you to mould it to whatever shape your project dictates. It is also less than 200 lines of Nix code, making it easy to just dig in and learn a bit about Nix.
 
 Happy hacking!
 

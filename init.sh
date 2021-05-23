@@ -33,7 +33,7 @@ sed -i "s/replaceme/$project_name/g" ./bin/Main.hs
 sed -i -e "s/pwm/$project_name/" -e '/cachix-action/,+3 s/.*/# &/' '.github/workflows/nix.yml'
 
 # Create an .envrc and fire up the nix shell with it
-echo -e "use nix\nwatch_file nixkell.toml\nwatch_file nix/sources.json" > .envrc
+echo -e "use nix\nwatch_file nixkell.toml\nwatch_file package.yaml\nwatch_file nix/*" > .envrc
 direnv allow .
 
 # Finally delete this script
