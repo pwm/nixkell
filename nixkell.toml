@@ -14,7 +14,6 @@ tools = [
   "haskell-language-server",
   "haskellPackages.implicit-hie",
   "hlint",
-  "hpack",
   "niv",
   "nixpkgs-fmt",
   "ormolu",
