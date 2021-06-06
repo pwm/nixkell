@@ -1,6 +1,6 @@
-{ system ? builtins.currentSystem }:
+{ system ? builtins.currentSystem, compiler ? null }:
 let
-  pkgs = import ./nix { inherit system; };
+  pkgs = import ./nix { inherit system compiler; };
 in
 pkgs.mkShell {
   buildInputs = [

@@ -17,6 +17,7 @@ tools = [
   "niv",
   "nixpkgs-fmt",
   "ormolu",
+  "treefmt",
 ]
 
 # These files and directories will be excluded from the nix build.

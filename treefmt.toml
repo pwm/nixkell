@@ -1,0 +1,23 @@
+# One CLI to format the code tree - https://github.com/numtide/treefmt
+
+[formatter.haskell]
+command = "ormolu"
+includes = ["*.hs"]
+options = [
+  "--ghc-opt", "-XBangPatterns",
+  "--ghc-opt", "-XNumericUnderscores",
+  "--ghc-opt", "-XOverloadedLabels",
+  "--ghc-opt", "-XPatternSynonyms",
+  "--ghc-opt", "-XTypeApplications",
+  "--mode", "inplace",
+  "--check-idempotence",
+]
+
+[formatter.nix]
+command = "nixpkgs-fmt"
+includes = ["*.nix"]
+# Don't format generated code
+excludes = [
+  "nix/packages/*.nix",
+  "nix/sources.nix",
+]

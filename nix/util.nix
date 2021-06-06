@@ -18,16 +18,8 @@
           && ! lib.any (d: lib.hasPrefix d (relToPath path)) ignorePaths;
     };
 
-  # Build with our haskell instead of the stock for selected packages
-  buildWith = ourHaskell: names: paths: map
-    (path:
-      let fNames = lib.filter (name: lib.hasSuffix name path) names;
-      in
-      if fNames != [ ]
-      then ourHaskell.${(builtins.head fNames)}
-      else lib.getAttrFromPath (lib.splitString "." path) pkgs
-    )
-    paths;
+  # Given a list of pkg names and return a list of pkgs 
+  getFromPkgs = paths: map (path: lib.getAttrFromPath (lib.splitString "." path) pkgs) paths;
 
   # Speed up building by disabling a few steps
   leanPkg =

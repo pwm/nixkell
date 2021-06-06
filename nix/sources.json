@@ -17,10 +17,16 @@
         "homepage": "",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "82abb66345f583001009f1be36f81c4082098011",
-        "sha256": "08c5hhh8xfw095mmqrfm1y4qwczyzy3i5wpzl8bn10rrzg4538j3",
+        "rev": "d8eb97e3801bde96491535f40483d550b57605b9",
+        "sha256": "1bdd7jinq5d40qai45jfkbcw1n96c7fdlams5iidwzy2ag8axlqh",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/82abb66345f583001009f1be36f81c4082098011.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/d8eb97e3801bde96491535f40483d550b57605b9.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "treefmt": {
+        "branch": "master",
+        "repo": "git@github.com:numtide/treefmt.git",
+        "rev": "233f472aa3447e8ad29b1dbef5b1983cd1ce43c2",
+        "type": "git"
     }
 }
