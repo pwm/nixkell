@@ -1,0 +1,10 @@
+packages: *.cabal
+
+-- stan needs the .hie files to run its analysis
+package *
+  ghc-options: -fwrite-ide-info
+               -hiedir=.hie
+
+-- tell ghc to write the package environment file
+write-ghc-environment-files: always
+
