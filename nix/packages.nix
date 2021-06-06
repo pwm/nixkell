@@ -1,4 +1,4 @@
-{ pkgs }:
+{ pkgs, compiler }:
 let
   lib = pkgs.lib;
 
@@ -9,8 +9,10 @@ let
 
   conf = lib.importTOML ../nixkell.toml;
 
+  ghcVersion = if compiler != null then compiler else conf.ghc;
+
   # Create our own setup using our choosen GHC version as a starting point
-  ourHaskell = pkgs.haskell.packages.${("ghc" + util.removeDot conf.ghc)}.override {
+  ourHaskell = pkgs.haskell.packages.${("ghc" + util.removeDot ghcVersion)}.override {
     overrides =
       let
         depsFromDir = pkgs.haskell.lib.packagesFromDirectory {
@@ -35,8 +37,7 @@ let
     pkgs.haskell.lib.getHaskellBuildInputs ourHaskell.replaceme
   );
 
-  # Ensure that HLS is compiled with our version of GHC
-  tools = util.buildWith ourHaskell [ "haskell-language-server" ] conf.env.tools;
+  tools = util.getFromPkgs conf.env.tools;
 
   scripts = import ./scripts.nix { inherit pkgs; };
 in

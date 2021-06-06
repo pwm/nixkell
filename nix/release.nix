@@ -1,5 +1,5 @@
-{ system ? builtins.currentSystem }:
+{ system ? builtins.currentSystem, compiler ? null }:
 let
-  pkgs = import ./. { inherit system; };
+  pkgs = import ./. { inherit system compiler; };
 in
 pkgs.replaceme
