@@ -18,7 +18,7 @@
           && ! lib.any (d: lib.hasPrefix d (relToPath path)) ignorePaths;
     };
 
-  # Given a list of pkg names and return a list of pkgs 
+  # Given a list of pkg names return a list of pkgs 
   getFromPkgs = paths: map (path: lib.getAttrFromPath (lib.splitString "." path) pkgs) paths;
 
   # Speed up building by disabling a few steps
