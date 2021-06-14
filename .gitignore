@@ -1,6 +1,6 @@
+.ghc.environment*
+.hie
+cabal.project.local
 dist-newstyle
-**/cabal.project.local
-**/.ghc.environment*
-**/result*
-.hie/
+result*
 *~

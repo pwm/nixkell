@@ -1,6 +1,11 @@
 name: CI
 
-on: [push]
+on:
+  push:
+    branches:
+      - master
+  pull_request_target:
+  workflow_dispatch:
 
 jobs:
   nix:
@@ -13,11 +18,17 @@ jobs:
           - ubuntu-latest
           - macOS-latest
         ghc:
-          - "8.8.4"
           - "8.10.4"
+          - "8.8.4"
 
     steps:
-      - uses: actions/checkout@v2.3.4
+      # https://github.com/dependabot/dependabot-core/issues/3253#issuecomment-799466911
+      - uses: actions/checkout@v2
+        if: ${{ github.event_name == 'pull_request_target' }}
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - uses: actions/checkout@v2
+        if: ${{ github.event_name != 'pull_request_target' }}
 
       - name: Set nix path
         id: nix-path
@@ -31,10 +42,20 @@ jobs:
           extra_nix_config: |
             log-lines = 1000
 
-      - uses: cachix/cachix-action@v10
+      - name: Install Cachix
+        uses: cachix/cachix-action@v10
         with:
           name: nixkell
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+
+      - name: Nix Shell
+        run: |
+          nix-shell --run "echo OK"
+
+      - name: Check code formatting
+        if: ${{runner.os == 'Linux'}}
+        run: |
+          nix-shell --run "treefmt --fail-on-change"
 
       - name: Build
         run: |
