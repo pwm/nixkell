@@ -12,7 +12,7 @@ let
   '';
   run = pkgs.writeShellScriptBin "run" ''
     set -euo pipefail
-    result/bin/replaceme
+    result/bin/replaceme "$@"
   '';
 in
 [ logo build run ]
