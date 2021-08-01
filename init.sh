@@ -13,14 +13,15 @@ if [[ $(basename -s .git "$repo_url") != "nixkell" ]]; then
   exit 1
 fi
 
-# Nuke nixkell's .git and init new repo
+# Nuke nixkell's .git, assets and init new repo
 rm -rf .git
+rm -rf assets
 git init .
 
 project_name=${PWD##*/}
 
 # Blank slate readme
-echo "# $project_name" > README.md
+echo "# $project_name" >README.md
 
 # Replace all dummy "replaceme" with the project name
 for i in $(find . -type f -name "*.nix"); do
@@ -33,7 +34,13 @@ sed -i "s/replaceme/$project_name/g" ./bin/Main.hs
 sed -i -e "s/pwm/$project_name/" -e '/cachix-action/,+3 s/.*/# &/' '.github/workflows/nix.yml'
 
 # Create an .envrc and fire up the nix shell with it
-echo -e "use nix\nwatch_file nixkell.toml\nwatch_file package.yaml\nwatch_file nix/*" > .envrc
+cat >.envrc <<EOF
+#!/usr/bin/env bash
+use nix
+watch_file nixkell.toml
+watch_file package.yaml
+watch_file nix/*
+EOF
 direnv allow .
 
 # Finally delete this script
