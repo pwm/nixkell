@@ -1,0 +1,22 @@
+- arguments:
+    - -XTypeApplications
+    - -XNumericUnderscores
+    - -XBangPatterns
+    - -XPatternSynonyms
+    - -XOverloadedLabels
+
+- modules:
+    - { name: [Data.List], as: List }
+    - { name: [Data.List.NonEmpty], as: NonEmpty }
+    - { name: [Data.Vector], as: Vector }
+    - { name: [Data.Set], as: Set }
+    - { name: [Data.HashSet], as: HSet }
+    - { name: [Data.Set.Ordered], as: OSet }
+    - { name: [Data.Map, Data.Map.Strict], as: Map }
+    - { name: [Data.HashMap.Strict, Data.HashMap.Lazy], as: HMap }
+    - { name: [Data.Sequence], as: Sequence }
+    - { name: [Data.ByteString, Data.ByteString.Builder, Data.ByteString.Char8], as: BS }
+    - { name: [Data.ByteString.Lazy, Data.ByteString.Lazy.Char8], as: BSL }
+    - { name: [Data.Text, Data.Text.Encoding], as: T }
+    - { name: [Data.Text.Lazy, Data.Text.Lazy.Encoding], as: TL }
+

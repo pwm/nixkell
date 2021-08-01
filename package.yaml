@@ -1,8 +1,20 @@
 name: replaceme
 version: 0.1.0.0
 
+# a set of basic libraries used by most apps
 dependencies:
   - base >= 4.7 && < 5
+  - bytestring
+  - containers
+  - directory
+  - filepath
+  - mtl
+  - random
+  - text
+  - time
+  - transformers
+  - unordered-containers
+  - vector
 
 library:
   source-dirs: src
@@ -35,6 +47,8 @@ tests:
 default-extensions:
   - BangPatterns
   - BinaryLiterals
+  - ConstraintKinds
+  - DataKinds
   - DeriveAnyClass
   - DeriveDataTypeable
   - DeriveFoldable
@@ -54,11 +68,13 @@ default-extensions:
   - NamedFieldPuns
   - NumericUnderscores
   - LambdaCase
+  - OverloadedLabels
   - OverloadedStrings
   - ScopedTypeVariables
   - StandaloneDeriving
   - TupleSections
   - TypeApplications
+  - TypeOperators
 
 ghc-options:
   - -Weverything
