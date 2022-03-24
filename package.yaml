@@ -41,8 +41,6 @@ tests:
     dependencies:
       - hspec
       - replaceme
-    verbatim:
-      build-tool-depends: hspec-discover:hspec-discover == 2.*
 
 default-extensions:
   - BangPatterns

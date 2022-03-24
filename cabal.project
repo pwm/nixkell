@@ -8,3 +8,7 @@ package *
 -- tell ghc to write the package environment file
 write-ghc-environment-files: always
 
+-- Nix handles dependencies. 
+-- It is generally a bug if cabal has to download anything
+-- In other words ~/.cabal should be empty (modulo some meta files)
+active-repositories: none
