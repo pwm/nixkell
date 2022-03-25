@@ -58,3 +58,7 @@ jobs:
       - name: Build
         run: |
           nix-build ./nix/release.nix --argstr compiler ${{ matrix.ghc }}
+
+      - name: Run
+        run: |
+          result/bin/replaceme
