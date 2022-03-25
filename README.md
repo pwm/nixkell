@@ -56,28 +56,27 @@ I hope these points convinces you to give Nix and Nixkell a try.
 
 ## Prerequisites
 
-1. Install [nix](https://nixos.org/)
+MacOs specific notes: 
+ - you will need the Xcode Command Line Tools
+ - for M1 you might want to go through Rosetta
+
+1. Install [Nix](https://nixos.org/)
 
 ```
-# For Linux and macOS < Catalina
 $ sh <(curl -L https://nixos.org/nix/install)
-```
-
-```
-# For macOS >= Catalina
-$ sh <(curl -L https://nixos.org/nix/install) --darwin-use-unencrypted-nix-store-volume
-```
-
-2. Verify nix and install [direnv](https://direnv.net/):
-
-```
 $ nix --version
+```
+
+2. Install [direnv](https://direnv.net/):
+
+```
 $ nix-env -iA nixpkgs.direnv
+$ direnv --version
 ```
 
 3. Once direnv is installed you need to [enable it](https://direnv.net/docs/hook.html) in your shell!
 
-4. Optional: You can install [cachix](https://cachix.org/) to take advantage of Nixkell's own binary cache:
+4. Optional: Install [cachix](https://cachix.org/) to take advantage of Nixkell's own binary cache:
 
 ```
 $ nix-env -iA cachix -f https://cachix.org/api/v1/install
