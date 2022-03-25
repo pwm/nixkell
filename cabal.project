@@ -8,6 +8,11 @@ package *
 -- tell ghc to write the package environment file
 write-ghc-environment-files: always
 
+-- Define -O0 by default so that all dev processes are faster.
+-- This also affects HLS which will pick up on this (otherwise it'll use -O1)
+-- CI Nix builds are unaffected by this and will use the default -O1
+optimization: False
+
 -- Nix handles dependencies. 
 -- It is generally a bug if cabal has to download anything
 -- In other words ~/.cabal should be empty (modulo some meta files)
