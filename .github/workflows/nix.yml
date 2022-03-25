@@ -22,11 +22,11 @@ jobs:
 
     steps:
       # https://github.com/dependabot/dependabot-core/issues/3253#issuecomment-799466911
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         if: ${{ github.event_name == 'pull_request_target' }}
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         if: ${{ github.event_name != 'pull_request_target' }}
 
       - name: Set nix path
