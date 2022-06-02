@@ -21,7 +21,7 @@ git init .
 project_name=${PWD##*/}
 
 # Blank slate readme
-echo "# $project_name" >README.md
+echo "# $project_name" >README.md
 
 # Replace all dummy "replaceme" with the project name
 for i in $(find . -type f -name "*.nix"); do
