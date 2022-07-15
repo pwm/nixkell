@@ -37,8 +37,17 @@ let
     pkgs.haskell.lib.getHaskellBuildInputs ourHaskell.replaceme
   );
 
-  # Only add HLS if it's present in nixkell.toml
-  tools = util.getFromPkgs conf.env.tools ++ [ ourHaskell.haskell-language-server ];
+  # NB. If HLS is present in the list of tools we ensure
+  # that it is compiled with the correct GHC version.
+  tools =
+    let
+      hls = "haskell-language-server";
+      hasHLS = ps: util.has hls ps || util.has ("haskellPackages." + hls) ps;
+      removeHLS = ps: util.remove hls (util.remove ("haskellPackages." + hls) ps);
+    in
+    if hasHLS conf.env.tools
+    then map util.getDrv (removeHLS conf.env.tools) ++ [ ourHaskell.haskell-language-server ]
+    else map util.getDrv conf.env.tools;
 
   scripts = import ./scripts.nix { inherit pkgs; };
 in
