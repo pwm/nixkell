@@ -37,7 +37,8 @@ let
     pkgs.haskell.lib.getHaskellBuildInputs ourHaskell.replaceme
   );
 
-  tools = util.getFromPkgs conf.env.tools;
+  # Only add HLS if it's present in nixkell.toml
+  tools = util.getFromPkgs conf.env.tools ++ [ ourHaskell.haskell-language-server ];
 
   scripts = import ./scripts.nix { inherit pkgs; };
 in
