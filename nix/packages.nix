@@ -12,7 +12,7 @@ let
   ghcVersion = if compiler != null then compiler else conf.ghc;
 
   # Create our own setup using our choosen GHC version as a starting point
-  ourHaskell = pkgs.haskell.packages.${("ghc" + util.removeDot ghcVersion)}.override {
+  ourHaskell = pkgs.haskell.packages.${("ghc" + util.removeChar "." ghcVersion)}.override {
     overrides =
       let
         depsFromDir = pkgs.haskell.lib.packagesFromDirectory {

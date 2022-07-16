@@ -2,10 +2,10 @@
 {
   /* Remove dots from strings
 
-    > removeDot "9.2.3"
+    > removeChar "." "9.2.3"
     "923"
   */
-  removeDot = s: lib.replaceStrings [ "." ] [ "" ] s;
+  removeChar = c: s: lib.replaceStrings [ c ] [ "" ] s;
 
   # Filter .gitignore as well as files and paths ignored in the nixkell config
   filterSrc = path: { ignoreFiles ? [ ], ignorePaths ? [ ] }:
