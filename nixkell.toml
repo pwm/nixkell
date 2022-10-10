@@ -3,7 +3,7 @@
 # Warning: if you don't choose one from the currently available versions
 # https://github.com/NixOS/nixpkgs/tree/master/pkgs/development/compilers/ghc
 # you will most likely have to compile *everything* yourself.
-ghc = "9.2.3"
+ghc = "9.2.4"
 
 # List of tools to be available in the nix shell.
 # Add or remove as you please.
