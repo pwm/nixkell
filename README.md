@@ -58,7 +58,10 @@ I hope these points convinces you to give Nix and Nixkell a try.
 
 MacOs specific notes: 
  - you will need the Xcode Command Line Tools
- - for M1 you might want to go through Rosetta
+
+```
+xcode-select --install
+```
 
 1. Install [Nix](https://nixos.org/)
 

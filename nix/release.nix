@@ -1,5 +1,7 @@
-{ system ? builtins.currentSystem, compiler ? null }:
-let
-  pkgs = import ./. { inherit system compiler; };
+{
+  system ? builtins.currentSystem,
+  compiler ? null,
+}: let
+  pkgs = import ./. {inherit system compiler;};
 in
-pkgs.replaceme
+  pkgs.nixkell
