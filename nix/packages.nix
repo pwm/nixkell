@@ -1,5 +1,7 @@
-{ pkgs, compiler }:
-let
+{
+  pkgs,
+  compiler,
+}: let
   lib = pkgs.lib;
 
   util = import ./util.nix {
@@ -9,53 +11,56 @@ let
 
   conf = lib.importTOML ../nixkell.toml;
 
-  ghcVersion = if compiler != null then compiler else conf.ghc;
+  ghcVersion =
+    if compiler != null
+    then compiler
+    else conf.ghc;
 
-  # Create our own setup using our choosen GHC version as a starting point
-  ourHaskell = pkgs.haskell.packages.${("ghc" + util.removeChar "." ghcVersion)}.override {
-    overrides =
-      let
-        depsFromDir = pkgs.haskell.lib.packagesFromDirectory {
-          directory = ./packages;
-        };
-        manual = _hfinal: hprev: {
-          replaceme =
-            let
-              filteredSrc = util.filterSrc ../. {
-                ignoreFiles = conf.ignore.files;
-                ignorePaths = conf.ignore.paths;
-              };
-            in
-            hprev.callCabal2nix "replaceme" filteredSrc { };
-        };
-      in
+  hlsDisablePlugins =
+    pkgs.lib.foldr
+    (plugin: hls: pkgs.haskell.lib.disableCabalFlag (hls.override {${"hls-" + plugin + "-plugin"} = null;}) plugin);
+
+  # Create your own setup using the choosen GHC version (in the config) as a starting point
+  ourHaskell = pkgs.haskell.packages.${"ghc" + util.removeChar "." ghcVersion}.override {
+    overrides = let
+      # https://github.com/pwm/nixkell#direct-hackagegithub-dependencies
+      depsFromDir = pkgs.haskell.lib.packagesFromDirectory {
+        directory = ./packages;
+      };
+
+      manual = _hfinal: hprev: {
+        # Don't build plugins you don't use
+        haskell-language-server =
+          hlsDisablePlugins hprev.haskell-language-server conf.hls.disable_plugins;
+
+        nixkell = let
+          filteredSrc = util.filterSrc ../. {
+            ignoreFiles = conf.ignore.files;
+            ignorePaths = conf.ignore.paths;
+          };
+        in
+          hprev.callCabal2nix "nixkell" filteredSrc {};
+      };
+    in
       lib.composeExtensions depsFromDir manual;
   };
 
   # Add our package with its dependencies to GHC
-  ghc = ourHaskell.ghc.withPackages (_ps:
-    pkgs.haskell.lib.getHaskellBuildInputs ourHaskell.replaceme
+  ghc = ourHaskell.ghc.withPackages (
+    _ps: pkgs.haskell.lib.getHaskellBuildInputs ourHaskell.nixkell
   );
 
-  # NB. If HLS is present in the list of tools we ensure
-  # that it is compiled with the correct GHC version.
-  tools =
-    let
-      hls = "haskell-language-server";
-      hasHLS = ps: util.has hls ps || util.has ("haskellPackages." + hls) ps;
-      removeHLS = ps: util.remove hls (util.remove ("haskellPackages." + hls) ps);
-    in
-    if hasHLS conf.env.tools
-    then map util.getDrv (removeHLS conf.env.tools) ++ [ ourHaskell.haskell-language-server ]
-    else map util.getDrv conf.env.tools;
+  # Compile haskell tools with ourHaskell to ensure compatibility
+  haskell_tools = map (p: ourHaskell.${lib.removePrefix "haskellPackages." p}) conf.env.haskell_tools;
 
-  scripts = import ./scripts.nix { inherit pkgs; };
-in
-{
-  bin = util.leanPkg ourHaskell.replaceme;
+  tools = map util.getDrv conf.env.tools;
+
+  scripts = import ./scripts.nix {inherit pkgs;};
+in {
+  bin = util.leanPkg ourHaskell.nixkell;
 
   shell = pkgs.buildEnv {
-    name = "replaceme-env";
-    paths = [ ghc ] ++ tools ++ scripts;
+    name = "nixkell-env";
+    paths = [ghc] ++ haskell_tools ++ tools ++ scripts;
   };
 }

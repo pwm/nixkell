@@ -1,5 +1,4 @@
-{ pkgs }:
-let
+{pkgs}: let
   logo = pkgs.writeShellScriptBin "logo" ''
     set -euo pipefail
     echo -e "\n$(tput setaf 2)"
@@ -12,7 +11,6 @@ let
   '';
   run = pkgs.writeShellScriptBin "run" ''
     set -euo pipefail
-    result/bin/replaceme "$@"
+    result/bin/nixkell "$@"
   '';
-in
-[ logo build run ]
+in [logo build run]

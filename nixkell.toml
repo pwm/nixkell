@@ -3,25 +3,41 @@
 # Warning: if you don't choose one from the currently available versions
 # https://github.com/NixOS/nixpkgs/tree/master/pkgs/development/compilers/ghc
 # you will most likely have to compile *everything* yourself.
-ghc = "9.2.4"
+ghc = "9.2.6"
 
-# List of tools to be available in the nix shell.
-# Add or remove as you please.
+# List of tools to be available in the nix shell
 [env]
+
+# We want these tools to be built with our haskell
+haskell_tools = [
+  "haskell-language-server",
+  "hlint",
+  "ormolu",
+]
+
 tools = [
+  "alejandra",
   "cabal-install",
   "cabal2nix",
-  "haskell-language-server",
-  "haskellPackages.implicit-hie",
-  "hlint",
+  "nil",
   "niv",
-  "nixpkgs-fmt",
-  "ormolu",
+  "shellcheck",
+  "shfmt",
   "treefmt",
 ]
 
-# These files and directories will be excluded from the nix build.
-# This means there is no rebuild when changing these.
+# List of plugins the you don't want to build
+[hls]
+disable_plugins = [
+  "fourmolu",
+  "floskell",
+  # these seem to be disabled by default for 9.2.6
+  #"stylish-haskell",
+  #"brittany",
+]
+
+# These files and directories will be excluded from the nix build,
+# meaning there is no nix rebuild when changing them.
 [ignore]
 files = [
   "README.md",

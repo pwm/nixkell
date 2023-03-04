@@ -2,22 +2,25 @@
 
 [formatter.haskell]
 command = "ormolu"
-includes = ["*.hs"]
 options = [
-  "--ghc-opt", "-XBangPatterns",
-  "--ghc-opt", "-XNumericUnderscores",
-  "--ghc-opt", "-XOverloadedLabels",
-  "--ghc-opt", "-XPatternSynonyms",
-  "--ghc-opt", "-XTypeApplications",
   "--mode", "inplace",
-  "--check-idempotence",
+  "--check-idempotence"
 ]
+includes = ["*.hs"]
 
 [formatter.nix]
-command = "nixpkgs-fmt"
+command = "alejandra"
 includes = ["*.nix"]
-# Don't format generated code
 excludes = [
   "nix/packages/*.nix",
   "nix/sources.nix",
 ]
+
+[formatter.shell]
+command = "shfmt"
+options = [
+    "--indent", "2",
+    "--simplify",
+    "--write",
+]
+includes = ["*.sh"]

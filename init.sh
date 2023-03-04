@@ -23,24 +23,18 @@ project_name=${PWD##*/}
 # Blank slate readme
 echo "# $project_name" >README.md
 
-# Replace all dummy "replaceme" with the project name
+# Replace all dummy "nixkell" with the project name
 for i in $(find . -type f -name "*.nix"); do
-  sed -i "s/replaceme/$project_name/g" "$i"
+  sed -i "s/nixkell/$project_name/g" "$i"
 done
-sed -i "s/replaceme/$project_name/g" ./package.yaml
-sed -i "s/replaceme/$project_name/g" ./bin/Main.hs
-
+sed -i "s/nixkell/$project_name/g" ./package.yaml
+sed -i "s/nixkell/$project_name/g" ./bin/Main.hs
+# un-replace the name of the config
+sed -i "s/$project_name.toml/nixkell.toml/g" ./nix/packages.nix
 # comment out the Nixkell specific cachix entry from the CI config
 sed -i -e "s/pwm/$project_name/" -e '/cachix-action/,+3 s/.*/# &/' '.github/workflows/nix.yml'
 
-# Create an .envrc and fire up the nix shell with it
-cat >.envrc <<EOF
-#!/usr/bin/env bash
-use nix
-watch_file nixkell.toml
-watch_file package.yaml
-watch_file nix/*
-EOF
+# Fire up the nix shell
 direnv allow .
 
 # Finally delete this script

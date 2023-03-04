@@ -1,12 +1,13 @@
-name: replaceme
+name: nixkell
 version: 0.1.0.0
 
-# a set of basic libraries used by most apps
 dependencies:
   - base >= 4.7 && < 5
+  - aeson
   - bytestring
   - containers
   - directory
+  - either
   - filepath
   - mtl
   - random
@@ -20,7 +21,7 @@ library:
   source-dirs: src
 
 executables:
-  replaceme:
+  nixkell:
     main: Main.hs
     source-dirs: bin
     ghc-options:
@@ -28,7 +29,7 @@ executables:
       - -rtsopts
       - -with-rtsopts=-N
     dependencies:
-      - replaceme
+      - nixkell
 
 tests:
   spec:
@@ -40,13 +41,14 @@ tests:
       - -with-rtsopts=-N
     dependencies:
       - hspec
-      - replaceme
+      - nixkell
 
 default-extensions:
   - BangPatterns
   - BinaryLiterals
   - ConstraintKinds
   - DataKinds
+  - DefaultSignatures
   - DeriveAnyClass
   - DeriveDataTypeable
   - DeriveFoldable
@@ -59,20 +61,27 @@ default-extensions:
   - EmptyCase
   - FlexibleContexts
   - FlexibleInstances
+  - FunctionalDependencies
   - GeneralizedNewtypeDeriving
+  - ImportQualifiedPost
   - InstanceSigs
   - MultiParamTypeClasses
   - MultiWayIf
   - NamedFieldPuns
+  - NumDecimals
   - NumericUnderscores
   - LambdaCase
   - OverloadedLabels
+  - OverloadedRecordDot
   - OverloadedStrings
+  - PatternSynonyms
+  - RankNTypes
   - ScopedTypeVariables
   - StandaloneDeriving
   - TupleSections
   - TypeApplications
   - TypeOperators
+  - ViewPatterns
 
 ghc-options:
   - -Weverything
@@ -90,3 +99,4 @@ ghc-options:
   - -Wno-prepositive-qualified-module
   - -Wno-unused-packages
   - -Wno-implicit-prelude
+  - -Wno-missing-kind-signatures

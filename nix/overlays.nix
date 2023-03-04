@@ -1,9 +1,14 @@
-{ sources, compiler }:
-[
+{
+  sources,
+  compiler,
+}: [
   (final: prev: {
-    inherit (import sources.gitignore { inherit (prev) lib; }) gitignoreFilter;
+    inherit (import sources.gitignore {inherit (prev) lib;}) gitignoreFilter;
   })
   (final: prev: {
-    replaceme = import ./packages.nix { pkgs = prev; inherit compiler; };
+    nixkell = import ./packages.nix {
+      pkgs = prev;
+      inherit compiler;
+    };
   })
 ]
