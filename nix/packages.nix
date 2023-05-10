@@ -33,6 +33,11 @@
         haskell-language-server =
           hlsDisablePlugins hprev.haskell-language-server conf.hls.disable_plugins;
 
+        # https://github.com/NixOS/nixpkgs/issues/140774
+        niv = pkgs.haskell.lib.overrideCabal hprev.niv (_: {
+          enableSeparateBinOutput = false;
+        });
+
         nixkell = let
           filteredSrc = util.filterSrc ../. {
             ignoreFiles = conf.ignore.files;

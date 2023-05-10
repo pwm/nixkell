@@ -3,7 +3,7 @@
 # Warning: if you don't choose one from the currently available versions
 # https://github.com/NixOS/nixpkgs/tree/master/pkgs/development/compilers/ghc
 # you will most likely have to compile *everything* yourself.
-ghc = "9.2.6"
+ghc = "9.2.7"
 
 # List of tools to be available in the nix shell
 [env]
@@ -31,9 +31,6 @@ tools = [
 disable_plugins = [
   "fourmolu",
   "floskell",
-  # these seem to be disabled by default for 9.2.6
-  #"stylish-haskell",
-  #"brittany",
 ]
 
 # These files and directories will be excluded from the nix build,
