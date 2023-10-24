@@ -1,9 +1,11 @@
 # Nixkell config
 
+[ghc]
 # Warning: if you don't choose one from the currently available versions
 # https://github.com/NixOS/nixpkgs/tree/master/pkgs/development/compilers/ghc
 # you will most likely have to compile *everything* yourself.
-ghc = "9.2.7"
+version = "9.4.6"
+profiling = false
 
 # List of tools to be available in the nix shell
 [env]
