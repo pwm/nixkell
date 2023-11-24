@@ -5,22 +5,22 @@
         "homepage": "",
         "owner": "hercules-ci",
         "repo": "gitignore.nix",
-        "rev": "f840a659d57e53fa751a9248b17149fd0cf2a221",
-        "sha256": "1fmghsp9bbhqknkc9vkbpram9j0az6py9xhdk0xfs3mdf8s36cp6",
+        "rev": "9e21c80adf67ebcb077d75bd5e7d724d21eeafd6",
+        "sha256": "1lbkgn94y8850g7idqnbji12pscxjwrspnzmx8fmm7xmy9ablk5y",
         "type": "tarball",
-        "url": "https://github.com/hercules-ci/gitignore.nix/archive/f840a659d57e53fa751a9248b17149fd0cf2a221.tar.gz",
+        "url": "https://github.com/hercules-ci/gitignore.nix/archive/9e21c80adf67ebcb077d75bd5e7d724d21eeafd6.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
-    },
+  },
     "nixpkgs": {
         "branch": "nixos-unstable",
         "description": "Nix Packages collection",
         "homepage": "",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "19cf008bb18e47b6e3b4e16e32a9a4bdd4b45f7e",
-        "sha256": "0myq7fnykna5qazbk6hdgahy148yd7f5l8nrxhzllj67y86a5sxw",
+        "rev": "6500b4580c2a1f3d0f980d32d285739d8e156d92",
+        "sha256": "0427gyafxikhifckzfw4mc86id852l4jy0xd7rjxv5lx41sbvi3a",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/19cf008bb18e47b6e3b4e16e32a9a4bdd4b45f7e.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/6500b4580c2a1f3d0f980d32d285739d8e156d92.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
-    }
+  }
 }

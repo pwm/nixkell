@@ -14,21 +14,23 @@
   ghcVersion =
     if compiler != null
     then compiler
-    else conf.ghc;
+    else conf.ghc.version;
+
+  ghcVer = "ghc" + util.removeChar "." ghcVersion;
 
   hlsDisablePlugins =
     pkgs.lib.foldr
     (plugin: hls: pkgs.haskell.lib.disableCabalFlag (hls.override {${"hls-" + plugin + "-plugin"} = null;}) plugin);
 
   # Create your own setup using the choosen GHC version (in the config) as a starting point
-  ourHaskell = pkgs.haskell.packages.${"ghc" + util.removeChar "." ghcVersion}.override {
-    overrides = let
+  ourHaskell = pkgs.haskell.packages.${ghcVer}.override {
+    overrides = hfinal: hprev: let
       # https://github.com/pwm/nixkell#direct-hackagegithub-dependencies
       depsFromDir = pkgs.haskell.lib.packagesFromDirectory {
         directory = ./packages;
       };
 
-      manual = _hfinal: hprev: {
+      manual = hfinal: hprev: {
         # Don't build plugins you don't use
         haskell-language-server =
           hlsDisablePlugins hprev.haskell-language-server conf.hls.disable_plugins;
@@ -46,8 +48,22 @@
         in
           hprev.callCabal2nix "nixkell" filteredSrc {};
       };
+
+      profilingOverrides = hfinal: hprev: {
+        compiler = pkgs.haskell.compiler.${ghcVer}.override {
+          enableProfiling = true;
+          enableLibraryProfiling = true;
+        };
+        mkDerivation = args:
+          hprev.mkDerivation (args // {enableLibraryProfiling = true;});
+      };
     in
-      lib.composeExtensions depsFromDir manual;
+      lib.composeExtensions depsFromDir manual hfinal hprev
+      // (
+        if conf.ghc.profiling
+        then profilingOverrides hfinal hprev
+        else {}
+      );
   };
 
   # Add our package with its dependencies to GHC

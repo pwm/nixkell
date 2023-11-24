@@ -18,7 +18,7 @@ jobs:
           - ubuntu-latest
           - macOS-latest
         ghc:
-          - "9.2.7"
+          - "9.4.6"
 
     steps:
       # https://github.com/dependabot/dependabot-core/issues/3253#issuecomment-799466911
