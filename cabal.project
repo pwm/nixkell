@@ -3,7 +3,10 @@ packages: *.cabal
 package *
   test-show-details: direct
   ghc-options:
-    -j8 +RTS -A256m -n2m -RTS 
+    -j8 +RTS -A256m -n2m -RTS
+    -- The following sets -all_load and -dead_strip for ld in cctools
+    -- without it we get intermittent linker error on aarch64
+    -fwhole-archive-hs-libs
     -fwrite-ide-info
     -hiedir=.hie
 
