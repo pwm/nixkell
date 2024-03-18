@@ -5,7 +5,9 @@
 # https://github.com/NixOS/nixpkgs/tree/master/pkgs/development/compilers/ghc
 # you will most likely have to compile *everything* yourself.
 version = "9.4.8"
-profiling = false
+# optimise = true
+# profiling = false
+# benckmark = false
 
 # List of tools to be available in the nix shell
 [env]

@@ -39,26 +39,23 @@
   */
   getDrv = path: lib.getAttrFromPath (lib.splitString "." path) pkgs;
 
-  # Filter .gitignore as well as files and paths ignored in the config
-  filterSrc = path: {
-    ignoreFiles ? [],
-    ignorePaths ? [],
+  # Filter using .gitignore + ignore files and paths defined in the config
+  filterSrc = {
+    path,
+    name ? (baseNameOf path + "-src"),
+    files ? [],
+    paths ? [],
   }:
     lib.cleanSourceWith {
       src = path;
+      inherit name;
       filter = let
-        srcIgnored = gitignoreFilter path; # in let binding to memoize
+        gitIgnore = gitignoreFilter path; # in let binding to memoize
         relToPath = lib.removePrefix (toString path + "/");
       in
         path: type:
-          srcIgnored path type
-          && ! builtins.elem (baseNameOf path) ignoreFiles
-          && ! lib.any (d: lib.hasPrefix d (relToPath path)) ignorePaths;
+          gitIgnore path type
+          && ! builtins.elem (baseNameOf path) files
+          && ! lib.any (d: lib.hasPrefix d (relToPath path)) paths;
     };
-
-  # Speed up building by disabling a few steps
-  leanPkg = let
-    hl = pkgs.haskell.lib;
-  in
-    pkg: hl.dontHyperlinkSource (hl.disableLibraryProfiling (hl.dontCoverage (hl.dontHaddock pkg)));
 }
