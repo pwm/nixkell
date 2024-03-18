@@ -72,7 +72,7 @@
   );
 
   # Compile haskell tools with ourHaskell to ensure compatibility
-  haskell_tools = map (p: ourHaskell.${lib.removePrefix "haskellPackages." p}) conf.env.haskell_tools;
+  haskellTools = map (p: ourHaskell.${lib.removePrefix "haskellPackages." p}) conf.env.haskell_tools;
 
   tools = map util.getDrv conf.env.tools;
 
@@ -82,6 +82,6 @@ in {
 
   shell = pkgs.buildEnv {
     name = "nixkell-env";
-    paths = [ghc] ++ haskell_tools ++ tools ++ scripts;
+    paths = [ghc] ++ haskellTools ++ tools ++ scripts;
   };
 }

@@ -4,7 +4,7 @@
 # Warning: if you don't choose one from the currently available versions
 # https://github.com/NixOS/nixpkgs/tree/master/pkgs/development/compilers/ghc
 # you will most likely have to compile *everything* yourself.
-version = "9.4.6"
+version = "9.4.8"
 profiling = false
 
 # List of tools to be available in the nix shell
@@ -33,6 +33,7 @@ tools = [
 disable_plugins = [
   "fourmolu",
   "floskell",
+  "stan",
 ]
 
 # These files and directories will be excluded from the nix build,

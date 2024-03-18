@@ -18,7 +18,7 @@ jobs:
           - ubuntu-latest
           - macOS-latest
         ghc:
-          - "9.4.6"
+          - "9.4.8"
 
     steps:
       # https://github.com/dependabot/dependabot-core/issues/3253#issuecomment-799466911
@@ -28,6 +28,8 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/checkout@v3
         if: ${{ github.event_name != 'pull_request_target' }}
+      
+      - uses: jlumbroso/free-disk-space@main
 
       - name: Set nix path
         id: nix-path
