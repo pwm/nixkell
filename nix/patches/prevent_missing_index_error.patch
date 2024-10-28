@@ -1,0 +1,30 @@
+From ec242b1cb21e450d5212efd5c445f0d70786092e Mon Sep 17 00:00:00 2001
+From: Rebecca Turner <rbt@sent.as>
+Date: Tue, 27 Aug 2024 13:08:48 -0700
+Subject: [PATCH] Don't error if package index is missing
+
+All of the packages Cabal needs may already be present in the local
+package database; we don't know yet!
+
+This is a partial revert of #8944.
+
+See: https://github.com/haskell/cabal/pull/8944#issuecomment-2313147439
+---
+ src/Distribution/Client/IndexUtils.hs | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/src/Distribution/Client/IndexUtils.hs b/src/Distribution/Client/IndexUtils.hs
+index 2dc7d37e29c..0a6e6b40523 100644
+--- a/src/Distribution/Client/IndexUtils.hs
++++ b/src/Distribution/Client/IndexUtils.hs
+@@ -460,8 +460,8 @@ readRepoIndex verbosity repoCtxt repo idxState =
+       if isDoesNotExistError e
+         then do
+           case repo of
+-            RepoRemote{..} -> dieWithException verbosity $ MissingPackageList repoRemote
+-            RepoSecure{..} -> dieWithException verbosity $ MissingPackageList repoRemote
++            RepoRemote{..} -> warn verbosity $ exceptionMessageCabalInstall $ MissingPackageList repoRemote
++            RepoSecure{..} -> warn verbosity $ exceptionMessageCabalInstall $ MissingPackageList repoRemote
+             RepoLocalNoIndex local _ ->
+               warn verbosity $
+                 "Error during construction of local+noindex "
