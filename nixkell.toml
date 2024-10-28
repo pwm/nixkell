@@ -16,11 +16,11 @@ version = "9.4.8"
 haskell_tools = [
   "haskell-language-server",
   "hlint",
+  "nixfmt",
   "ormolu",
 ]
 
 tools = [
-  "alejandra",
   "cabal-install",
   "cabal2nix",
   "nil",
