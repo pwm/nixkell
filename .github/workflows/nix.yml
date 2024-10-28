@@ -15,8 +15,14 @@ jobs:
       ghc-version: ${{ steps.get-ghc-version.outputs.ghc_version }}
 
     steps:
+      - name: Checkout PR
+        uses: actions/checkout@v4
+        if: ${{ github.event_name == 'pull_request_target' }}
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Checkout
         uses: actions/checkout@v4
+        if: ${{ github.event_name != 'pull_request_target' }}
 
       - name: Download yq-go
         run: |

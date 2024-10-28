@@ -4,7 +4,7 @@
 # Warning: if you don't choose one from the currently available versions
 # https://github.com/NixOS/nixpkgs/tree/master/pkgs/development/compilers/ghc
 # you will most likely have to compile *everything* yourself.
-version = "9.4.8"
+version = "9.8.2"
 # optimise = true
 # profiling = false
 # benckmark = false
@@ -14,6 +14,7 @@ version = "9.4.8"
 
 # We want these tools to be built with our haskell
 haskell_tools = [
+  "cabal-install",
   "haskell-language-server",
   "hlint",
   "nixfmt",
@@ -21,7 +22,6 @@ haskell_tools = [
 ]
 
 tools = [
-  "cabal-install",
   "cabal2nix",
   "nil",
   "niv",
@@ -33,9 +33,9 @@ tools = [
 # List of plugins the you don't want to build
 [hls]
 disable_plugins = [
-  "fourmolu",
-  "floskell",
-  "stan",
+#  "fourmolu",
+#  "floskell",
+#  "stan",
 ]
 
 # These files and directories will be excluded from the nix build,

@@ -18,7 +18,7 @@ write-ghc-environment-files: always
 -- CI Nix builds are unaffected by this and will use the default -O1
 optimization: False
 
--- Nix handles dependencies. 
+-- Nix handles dependencies.
 -- It is generally a bug if cabal has to download anything
 -- In other words ~/.cabal should be empty (modulo some meta files)
 active-repositories: none

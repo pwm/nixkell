@@ -44,4 +44,7 @@
       gitIgnore path type && !builtins.elem (baseNameOf path) files
       && !lib.any (d: lib.hasPrefix d (relToPath path)) paths;
     };
+
+  patch = name: patches:
+    name.overrideAttrs (prev: { patches = prev.patches or [ ] ++ patches; });
 }
