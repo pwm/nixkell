@@ -15,7 +15,7 @@ jobs:
       ghc-version: ${{ steps.get-ghc-version.outputs.ghc_version }}
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Download yq-go
@@ -43,14 +43,16 @@ jobs:
 
     steps:
       # https://github.com/dependabot/dependabot-core/issues/3253#issuecomment-799466911
-      - uses: actions/checkout@v4 (pull_request_target)
+      - name: Checkout PR
+        uses: actions/checkout@v4
         if: ${{ github.event_name == 'pull_request_target' }}
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
         if: ${{ github.event_name != 'pull_request_target' }}
 
-      - name: Free disk space (Ubuntu only)
+      - name: Free disk space (Linux only)
         if: ${{ runner.os == 'Linux' }}
         uses: jlumbroso/free-disk-space@main
 
@@ -74,7 +76,7 @@ jobs:
         run: |
           nix-shell --run "echo OK"
 
-      - name: Check code formatting (Ubuntu only)
+      - name: Check code formatting (Linux only)
         if: ${{ runner.os == 'Linux' }}
         run: |
           nix-shell --run "treefmt --fail-on-change"
