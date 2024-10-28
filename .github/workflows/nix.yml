@@ -26,7 +26,7 @@ jobs:
         id: get-ghc-version
         run: |
           GHC_VERSION=$(yq -eoy '.ghc.version' nixkell.toml)
-          echo "::set-output name=ghc_version::$GHC_VERSION"
+          echo "ghc_version=$GHC_VERSION" >> $GITHUB_OUTPUT
 
   nix:
     name: ${{ matrix.os }} / ghc ${{ needs.extract-ghc-version.outputs.ghc-version }}
