@@ -9,17 +9,18 @@ on:
 
 jobs:
   extract-ghc-version:
+    name: Extract GHC version
     runs-on: ubuntu-latest
     outputs:
       ghc-version: ${{ steps.get-ghc-version.outputs.ghc_version }}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Download yq-go
         run: |
-          YQ_BINARY="yq_linux_amd64"
-          curl -L "https://github.com/mikefarah/yq/releases/download/v4.44.3/${YQ_BINARY}" -o /usr/local/bin/yq
+          curl -L "https://github.com/mikefarah/yq/releases/download/v4.44.3/yq_linux_amd64" -o /usr/local/bin/yq
           chmod +x /usr/local/bin/yq
 
       - name: Extract GHC version from nixkell.toml
@@ -37,7 +38,6 @@ jobs:
         os:
           - ubuntu-latest
           - macOS-latest
-
     env:
       GHC_VERSION: ${{ needs.extract-ghc-version.outputs.ghc-version }}
 
@@ -51,7 +51,7 @@ jobs:
         if: ${{ github.event_name != 'pull_request_target' }}
 
       - name: Free disk space (Ubuntu only)
-        if: runner.os == 'Linux'
+        if: ${{ runner.os == 'Linux' }}
         uses: jlumbroso/free-disk-space@main
 
       - name: Set nix path
@@ -75,12 +75,13 @@ jobs:
           nix-shell --run "echo OK"
 
       - name: Check code formatting
-        if: ${{runner.os == 'Linux'}}
+        if: ${{ runner.os == 'Linux' }}
         run: |
           nix-shell --run "treefmt --fail-on-change"
 
       - name: GHC version
-        run: echo "Using GHC version $GHC_VERSION"
+        run: |
+          echo "Using GHC version $GHC_VERSION"
 
       - name: Build
         run: |
