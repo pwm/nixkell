@@ -32,7 +32,7 @@ sed -i "s/nixkell/$project_name/g" ./bin/Main.hs
 # un-replace the name of the config
 sed -i "s/$project_name.toml/nixkell.toml/g" ./nix/packages.nix
 # comment out the Nixkell specific cachix entry from the CI config
-sed -i -e "s/pwm/$project_name/" -e '/cachix-action/,+3 s/.*/# &/' '.github/workflows/nix.yml'
+sed -i -e '/cachix-action/{x;d;}' -e '/cachix-action/,+3 s/.*/# &/' '.github/workflows/nix.yml'
 
 # Fire up the nix shell
 direnv allow .
