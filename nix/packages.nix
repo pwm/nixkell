@@ -49,9 +49,8 @@ let
     depsFromDir = hlib.packagesFromDirectory { directory = ./packages; };
 
     manual = hfinal: hprev: {
-      cabal-install = util.patch hprev.cabal-install [
-        ./patches/prevent_missing_index_error.patch
-      ];
+      cabal-install = util.patch hprev.cabal-install
+        [ ./patches/prevent_missing_index_error.patch ];
 
       haskell-language-server = hlsDisablePlugins hprev.haskell-language-server
         conf.hls.disable_plugins;

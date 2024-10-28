@@ -46,7 +46,5 @@
     };
 
   patch = name: patches:
-    name.overrideAttrs (prev: {
-      patches = prev.patches or [ ] ++ patches;
-    });
+    name.overrideAttrs (prev: { patches = prev.patches or [ ] ++ patches; });
 }
