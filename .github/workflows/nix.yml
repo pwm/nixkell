@@ -8,17 +8,38 @@ on:
   workflow_dispatch:
 
 jobs:
+  extract-ghc-version:
+    runs-on: ubuntu-latest
+    outputs:
+      ghc-version: ${{ steps.get-ghc-version.outputs.ghc_version }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install toml-cli
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y toml-cli
+
+      - name: Get GHC version
+        id: get-ghc-version
+        run: |
+          GHC_VERSION=$(toml get nixkell.toml ghc.version)
+          echo "::set-output name=ghc_version::$GHC_VERSION"
+
   nix:
-    name: ${{ matrix.os }} / ghc ${{ matrix.ghc }}
+    name: ${{ matrix.os }} / ghc ${{ needs.extract-ghc-version.outputs.ghc-version }}
     runs-on: ${{ matrix.os }}
+    needs: extract-ghc-version
     strategy:
       fail-fast: false
       matrix:
         os:
           - ubuntu-latest
           - macOS-latest
-        ghc:
-          - "9.4.8"
+
+    env:
+      GHC_VERSION: ${{ needs.extract-ghc-version.outputs.ghc-version }}
 
     steps:
       # https://github.com/dependabot/dependabot-core/issues/3253#issuecomment-799466911
@@ -28,7 +49,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/checkout@v3
         if: ${{ github.event_name != 'pull_request_target' }}
-      
+
       - name: Free disk space (Ubuntu only)
         if: runner.os == 'Linux'
         uses: jlumbroso/free-disk-space@main
@@ -58,9 +79,12 @@ jobs:
         run: |
           nix-shell --run "treefmt --fail-on-change"
 
+      - name: GHC version
+        run: echo "Using GHC version $GHC_VERSION"
+
       - name: Build
         run: |
-          nix-build ./nix/release.nix --argstr compiler ${{ matrix.ghc }}
+          nix-build ./nix/release.nix --argstr compiler "$GHC_VERSION"
 
       - name: Run
         run: |
