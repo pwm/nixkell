@@ -43,7 +43,7 @@ jobs:
 
     steps:
       # https://github.com/dependabot/dependabot-core/issues/3253#issuecomment-799466911
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4 (pull_request_target)
         if: ${{ github.event_name == 'pull_request_target' }}
         with:
           ref: ${{ github.event.pull_request.head.sha }}
@@ -74,7 +74,7 @@ jobs:
         run: |
           nix-shell --run "echo OK"
 
-      - name: Check code formatting
+      - name: Check code formatting (Ubuntu only)
         if: ${{ runner.os == 'Linux' }}
         run: |
           nix-shell --run "treefmt --fail-on-change"
