@@ -29,7 +29,7 @@ jobs:
           echo "ghc_version=$(yq -eoy '.ghc.version' nixkell.toml)" | tee -a $GITHUB_OUTPUT
 
   nix:
-    name: ${{ matrix.os }} / ghc ${{ needs.extract-ghc-version.outputs.ghc-version }}
+    name: Build with GHC ${{ needs.extract-ghc-version.outputs.ghc-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     needs: extract-ghc-version
     strategy:
