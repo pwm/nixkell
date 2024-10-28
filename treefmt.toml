@@ -9,7 +9,7 @@ options = [
 includes = ["*.hs"]
 
 [formatter.nix]
-command = "alejandra"
+command = "nixfmt"
 includes = ["*.nix"]
 excludes = [
   "nix/packages/*.nix",
