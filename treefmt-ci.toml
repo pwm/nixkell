@@ -27,17 +27,3 @@ options = [
     "--simplify",
     "--diff",
 ]
-
-[formatter.prettier]
-command = "prettier"
-includes = [
-    "*.json",
-    "*.md",
-    "*.yaml",
-]
-options = [
-  "--list-different"
-]
-excludes = [
-  "nix/sources.json",
-]
