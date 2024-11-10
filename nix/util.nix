@@ -37,11 +37,13 @@
     lib.cleanSourceWith {
       src = path;
       inherit name;
-      filter = let
-        gitIgnore = gitignoreFilter path; # in let binding to memoize
-        relToPath = lib.removePrefix (toString path + "/");
-      in path: type:
-      gitIgnore path type && !builtins.elem (baseNameOf path) files
-      && !lib.any (d: lib.hasPrefix d (relToPath path)) paths;
+      filter =
+        let
+          gitIgnore = gitignoreFilter path; # in let binding to memoize
+          relToPath = lib.removePrefix (toString path + "/");
+        in
+        path: type:
+          gitIgnore path type && !builtins.elem (baseNameOf path) files
+          && !lib.any (d: lib.hasPrefix d (relToPath path)) paths;
     };
 }

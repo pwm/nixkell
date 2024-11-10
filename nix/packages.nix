@@ -31,13 +31,14 @@ let
         ])
       ] ++ pkgs.lib.optional (!(usingOr "optimise" true))
         hlib.disableOptimization
-        ++ pkgs.lib.optional (usingOr "profiling" false)
+      ++ pkgs.lib.optional (usingOr "profiling" false)
         hlib.enableExecutableProfiling
-        ++ pkgs.lib.optional (usingOr "benckmark" false) hlib.doBenchmark
-        ++ pkgs.lib.optional pkgs.stdenv.isAarch64
+      ++ pkgs.lib.optional (usingOr "benckmark" false) hlib.doBenchmark
+      ++ pkgs.lib.optional pkgs.stdenv.isAarch64
         (hlib.compose.appendConfigureFlag
           "--ghc-option=-fwhole-archive-hs-libs");
-    in lib.pipe pkg confFns;
+    in
+    lib.pipe pkg confFns;
 
   # pkgs/development/haskell-modules/configuration-hackage2nix/broken.yaml
   unbreak = drv:
@@ -58,27 +59,31 @@ let
         plugin);
 
   # Create your own setup using the choosen GHC version (in the config) as a starting point
-  ourHaskell = let
-    # https://github.com/pwm/nixkell#direct-hackagegithub-dependencies
-    depsFromDir = hlib.packagesFromDirectory { directory = ./packages; };
+  ourHaskell =
+    let
+      # https://github.com/pwm/nixkell#direct-hackagegithub-dependencies
+      depsFromDir = hlib.packagesFromDirectory { directory = ./packages; };
 
-    manual = hfinal: hprev: {
-      cabal-install = patch hprev.cabal-install
-        [ ./patches/prevent_missing_index_error.patch ];
+      manual = hfinal: hprev: {
+        cabal-install = patch hprev.cabal-install
+          [ ./patches/prevent_missing_index_error.patch ];
 
-      haskell-language-server = hlsDisablePlugins hprev.haskell-language-server
-        conf.hls.disable_plugins;
+        haskell-language-server = hlsDisablePlugins hprev.haskell-language-server
+          conf.hls.disable_plugins;
 
-      nixkell = let
-        cleanSource = util.filterSrc {
-          path = ../.; # Root of the project
-          files = conf.ignore.files;
-          paths = conf.ignore.paths;
-        };
-      in confPkg (hprev.callCabal2nix "nixkell" cleanSource { });
-    };
-  in pkgs.haskell.packages.${ghcVer}.extend
-  (lib.composeManyExtensions [ depsFromDir manual ]);
+        nixkell =
+          let
+            cleanSource = util.filterSrc {
+              path = ../.; # Root of the project
+              files = conf.ignore.files;
+              paths = conf.ignore.paths;
+            };
+          in
+          confPkg (hprev.callCabal2nix "nixkell" cleanSource { });
+      };
+    in
+    pkgs.haskell.packages.${ghcVer}.extend
+      (lib.composeManyExtensions [ depsFromDir manual ]);
 
   # Add our package with its dependencies to GHC
   ghc = ourHaskell.ghc.withPackages (_:
@@ -90,12 +95,13 @@ let
   # Compile haskell tools with ourHaskell to ensure compatibility
   haskellTools =
     builtins.map (p: ourHaskell.${lib.removePrefix "haskellPackages." p})
-    conf.env.haskell_tools;
+      conf.env.haskell_tools;
 
   tools = builtins.map util.getDrv conf.env.tools;
 
   scripts = import ./scripts.nix { inherit pkgs; };
-in {
+in
+{
   inherit conf ourHaskell ghc confPkg; # TODO: remove
 
   bin = ourHaskell.nixkell;

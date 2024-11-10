@@ -14,4 +14,5 @@ let
     set -euo pipefail
     result/bin/nixkell "$@"
   '';
-in [ logo build run ]
+in
+[ logo build run ]
