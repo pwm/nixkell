@@ -1,4 +1,5 @@
 {
+  "haskell.serverExecutablePath": "haskell-language-server",
   "nix.serverPath": "nil",
   "nix.serverSettings": {
     "nil": {

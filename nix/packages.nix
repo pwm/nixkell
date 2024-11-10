@@ -39,9 +39,23 @@ let
           "--ghc-option=-fwhole-archive-hs-libs");
     in lib.pipe pkg confFns;
 
-  hlsDisablePlugins = pkgs.lib.foldr (plugin: hls:
-    hlib.disableCabalFlag
-    (hls.override { ${"hls-" + plugin + "-plugin"} = null; }) plugin);
+  # pkgs/development/haskell-modules/configuration-hackage2nix/broken.yaml
+  unbreak = drv:
+    drv.overrideAttrs (prev: {
+      meta = prev.meta // { broken = false; };
+    });
+
+  # By default they live in ./haskellPackages/patches
+  patch = drv: patches:
+    drv.overrideAttrs (prev: {
+      patches = (prev.patches or [ ]) ++ patches;
+    });
+
+  hlsDisablePlugins =
+    pkgs.lib.foldr
+      (plugin: hls: hlib.disableCabalFlag
+        (hls.override (_: { ${plugin} = null; }))
+        plugin);
 
   # Create your own setup using the choosen GHC version (in the config) as a starting point
   ourHaskell = let
@@ -49,7 +63,7 @@ let
     depsFromDir = hlib.packagesFromDirectory { directory = ./packages; };
 
     manual = hfinal: hprev: {
-      cabal-install = util.patch hprev.cabal-install
+      cabal-install = patch hprev.cabal-install
         [ ./patches/prevent_missing_index_error.patch ];
 
       haskell-language-server = hlsDisablePlugins hprev.haskell-language-server

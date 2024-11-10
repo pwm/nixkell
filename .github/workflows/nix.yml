@@ -62,7 +62,7 @@ jobs:
         if: ${{ runner.os == 'Linux' }}
         uses: jlumbroso/free-disk-space@main
 
-      - name: Set nix path
+      - name: Set nixpkgs url
         id: nix-path
         run: |
           echo "nixpkgs=$(jq -r .nixpkgs.url ./nix/sources.json)" | tee -a $GITHUB_OUTPUT
@@ -74,7 +74,7 @@ jobs:
           extra_nix_config: |
             log-lines = 1000
 
-      - name: Install and configure Cachix
+      - name: Install and authorise Cachix
         uses: cachix/cachix-action@v15
         with:
           name: nixkell
@@ -84,10 +84,10 @@ jobs:
         run: |
           nix-shell --run "echo OK"
 
-      - name: Check code formatting (Linux only)
+      - name: Treefmt (Linux only)
         if: ${{ runner.os == 'Linux' }}
         run: |
-          nix-shell --run "treefmt --fail-on-change"
+          nix-shell --run "treefmt --ci --on-unmatched=debug --config-file treefmt-ci.toml --tree-root ."
 
       - name: GHC version
         run: |

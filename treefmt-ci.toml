@@ -4,7 +4,7 @@
 command = "ormolu"
 includes = ["*.hs"]
 options = [
-  "--mode", "inplace",
+  "--mode", "check",
   "--check-idempotence",
 ]
 
@@ -15,6 +15,9 @@ excludes = [
   "nix/packages/*.nix",
   "nix/sources.nix",
 ]
+options = [
+  "--check",
+]
 
 [formatter.shell]
 command = "shfmt"
@@ -22,5 +25,19 @@ includes = ["*.sh"]
 options = [
     "--indent", "2",
     "--simplify",
-    "--write",
+    "--diff",
+]
+
+[formatter.prettier]
+command = "prettier"
+includes = [
+    "*.json",
+    "*.md",
+    "*.yaml",
+]
+options = [
+  "--list-different"
+]
+excludes = [
+  "nix/sources.json",
 ]
