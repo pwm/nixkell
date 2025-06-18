@@ -7,7 +7,7 @@
 version = "9.8.2"
 # optimise = true
 # profiling = false
-# benckmark = false
+# benchmark = false
 
 # List of tools to be available in the nix shell
 [env]

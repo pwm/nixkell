@@ -1,6 +1,7 @@
 .direnv
 .ghc.environment*
 .hie
+.gcroots
 cabal.project.local
 dist-newstyle
 nixkell.cabal

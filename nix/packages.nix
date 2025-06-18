@@ -1,6 +1,10 @@
-{ pkgs, compiler, }:
+{ pkgs, compiler, static }:
 let
-  lib = pkgs.lib;
+  lib = assert (if static then
+    (pkgs.lib.asserts.assertMsg pkgs.stdenv.isLinux
+      "Static builds can be done on Linux only")
+  else
+    true); pkgs.lib;
 
   util = import ./util.nix {
     inherit pkgs;
@@ -13,7 +17,14 @@ let
 
   ghcVer = "ghc" + util.removeChar "." ghcVersion;
 
-  hlib = pkgs.haskell.lib;
+  hlib = pkgs.haskell.lib.compose;
+
+  # usual non-Haskell dependency libraries of static exectables
+  # you may need to add more of these if your code depends on them
+  gmp6 = pkgs.gmp6.override { withStatic = true; };
+  libffi = pkgs.libffi.overrideAttrs (old: { dontDisableStatic = true; });
+  ncurses = pkgs.ncurses.override { enableStatic = true; };
+  zlib = pkgs.zlib.static;
 
   confPkg = pkg:
     let
@@ -23,20 +34,35 @@ let
         hlib.dontCoverage
         hlib.dontHaddock
         # https://downloads.haskell.org/ghc/latest/docs/users_guide/runtime_control.html
-        (hlib.compose.appendConfigureFlags [
+        (hlib.appendConfigureFlags [
           "--ghc-option=+RTS"
           "--ghc-option=-A256m" # allocation area size
           "--ghc-option=-n2m" # allocation area chunksize
           "--ghc-option=-RTS"
         ])
-      ] ++ pkgs.lib.optional (!(usingOr "optimise" true))
+        (hlib.overrideCabal (old: { enableParallelBuilding = true; }))
+      ] ++ lib.optional (!(usingOr "optimise" true))
         hlib.disableOptimization
-      ++ pkgs.lib.optional (usingOr "profiling" false)
+      ++ lib.optional (usingOr "profiling" false)
         hlib.enableExecutableProfiling
-      ++ pkgs.lib.optional (usingOr "benckmark" false) hlib.doBenchmark
-      ++ pkgs.lib.optional pkgs.stdenv.isAarch64
-        (hlib.compose.appendConfigureFlag
-          "--ghc-option=-fwhole-archive-hs-libs");
+      ++ lib.optional (usingOr "benchmark" false) hlib.doBenchmark
+      ++ lib.optional pkgs.stdenv.isAarch64
+        (hlib.appendConfigureFlag
+          "--ghc-option=-fwhole-archive-hs-libs")
+      # config for static executables
+      ++ lib.optionals static [
+        hlib.justStaticExecutables
+        hlib.disableSharedLibraries
+        hlib.enableDeadCodeElimination
+        (hlib.appendConfigureFlags [
+          "--ghc-option=-fPIC"
+          "--ghc-option=-optl=-static"
+          "--extra-lib-dirs=${gmp6}/lib"
+          "--extra-lib-dirs=${libffi}/lib"
+          "--extra-lib-dirs=${ncurses}/lib"
+          "--extra-lib-dirs=${zlib}/lib"
+        ])
+      ];
     in
     lib.pipe pkg confFns;
 
@@ -53,12 +79,12 @@ let
     });
 
   hlsDisablePlugins =
-    pkgs.lib.foldr
+    lib.foldr
       (plugin: hls: hlib.disableCabalFlag
         (hls.override (_: { ${plugin} = null; }))
         plugin);
 
-  # Create your own setup using the choosen GHC version (in the config) as a starting point
+  # Create your own setup using the chosen GHC version (in the config) as a starting point
   ourHaskell =
     let
       # https://github.com/pwm/nixkell#direct-hackagegithub-dependencies
@@ -110,4 +136,18 @@ in
     name = "nixkell-env";
     paths = [ ghc ] ++ haskellTools ++ tools ++ scripts;
   };
-}
+} // (if static then {
+  # expose the static dependencies and build tools so that we can create Nix GC root for them
+  staticDeps = pkgs.symlinkJoin {
+    name = "static-deps";
+    paths = [
+      ghc
+      ourHaskell.buildHaskellPackages.jailbreak-cabal
+      pkgs.cabal2nix-unwrapped
+      gmp6
+      libffi
+      ncurses
+      zlib
+    ];
+  };
+} else { })
